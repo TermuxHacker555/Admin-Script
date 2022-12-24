@@ -124,6 +124,35 @@ function Load()
 local _, Result = pcall(readfile, OptionsFile);
 if _ then -- extremely ugly code yea i know but i dont care p.s. i hate pcall
 local _, Table = pcall(HttpService.JSONDecode, HttpService, Result);
+if _ then
+for i, v in pairs(Table) do
+if Options[i] ~= nil and Options[i].Value ~= nil and (typeof(Options[i].Value) == 'boolean' or typeof(Options[i].Value) == 'number') then
+Options[i].Value = v.Value;
+pcall(Options[i], v.Value);
+end
+end
+end
+end
+end
+
+Options('Enabled', 'ESP Enabled', true);
+Options('ShowTeam', 'Show Team', false);
+Options('ShowName', 'Show Names', true);
+Options('ShowDistance', 'Show Distance', true);
+Options('ShowHealth', 'Show Health', true);
+Options('ShowBoxes', 'Show Boxes', true);
+Options('ShowTracers', 'Show Tracers', true);
+Options('ShowDot', 'Show Head Dot', false);
+Options('VisCheck', 'Visibility Check', false);
+Options('Crosshair', 'Crosshair', false);
+Options('TextOutline', 'Text Outline', false);
+Options('MaxDistance', 'Max Distance', 2500, 100, 5000);
+Options('RefreshRate', 'Refresh Rate (ms)', 5, 1, 200);
+Options('MenuKey', 'Menu Key', Enum.KeyCode.F4, 1);
+Options('ResetSettings', 'Reset Settings', function()
+for i, v in pairs(Options) do
+if Options[i] ~= nil and Options[i].Value ~= nil and Options[i].Text ~= nil and (typeof(Options[i].Value) == 'boolean' or typeof(Options[i].Value) == 'number') then
+Options[i](Options[i].DefaultValue);
 end
 end
 end, 4);
