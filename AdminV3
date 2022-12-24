@@ -1,0 +1,147 @@
+
+
+local l__Players__1 = game:GetService("Players");
+local l__LocalPlayer__2 = l__Players__1.LocalPlayer;
+local v3 = {
+	[userid] = true
+
+};
+if v3[l__LocalPlayer__2.UserId] ~= true then
+	return;
+end;
+local l__UserInputService__4 = game:GetService("UserInputService");
+local l__ReplicatedStorage__5 = game:GetService("ReplicatedStorage");
+local v6 = require(l__ReplicatedStorage__5.Admin.AdminPanel);
+local v7 = require(l__ReplicatedStorage__5.Admin.AdminLogs);
+local v8 = require(l__ReplicatedStorage__5.Common.Fusion);
+local v9 = require(l__ReplicatedStorage__5.LoadOfflinePlayer);
+local v10 = require(l__ReplicatedStorage__5.Remotes);
+local v11 = v10.Function("GetAdminLogs");
+local u1 = v8.State(l__Players__1:GetPlayers());
+l__Players__1.PlayerAdded:Connect(function()
+	u1:set(l__Players__1:GetPlayers());
+end);
+l__Players__1.PlayerRemoving:Connect(function()
+	u1:set(l__Players__1:GetPlayers());
+end);
+local u2 = v8.State("None");
+local u3 = v8.State({});
+local u4 = v8.State({});
+local function u5(p1)
+	u3:set({});
+	u3:set(v11:InvokeServer(p1));
+	print(string.format("Loaded %i admin logs", #u3:get()));
+end;
+local v12 = {
+	Name = "Admin", 
+	Parent = l__LocalPlayer__2.PlayerGui, 
+	DisplayOrder = 2
+};
+local v13 = {};
+local v14 = {
+	Visible = v8.Computed(function()
+		return u2:get() == "AdminPanel";
+	end), 
+	Players = u1
+};
+function v14.LoadBanStatus(p2)
+	return v10.Function("CheckIfBanned"):InvokeServer(p2);
+end;
+function v14.BanUser(p3, p4)
+	v10.Event("Ban"):FireServer(p3, p4);
+end;
+function v14.UnbanUser(p5)
+	v10.Event("Unban"):FireServer(p5);
+end;
+function v14.KickUser(p6)
+	v10.Event("Kick"):FireServer(p6);
+end;
+function v14.ViewBooth(p7)
+	v9(p7);
+end;
+function v14.JoinUserServer(p8)
+	v10.Event("JoinUserServer"):FireServer(p8);
+end;
+function v14.CheckUserInGame(p9)
+	return v10.Function("CheckUserInGame"):InvokeServer(p9);
+end;
+local v15 = {
+	Visible = v8.Computed(function()
+		return u2:get() == "AdminLogs";
+	end), 
+	Logs = u3, 
+	HasPrevious = v8.Computed(function()
+		return u4:get().previous ~= nil;
+	end)
+};
+local function u6()
+	local v16 = DateTime.now().UnixTimestampMillis / 1000;
+	u4:set({
+		current = v16
+	});
+	u5(v16);
+end;
+function v15.OnRefresh()
+	u6();
+end;
+function v15.OnNext()
+	local v17 = u3:get();
+	u4:set({
+		current = v17[#v17].timestamp, 
+		previous = u4:get()
+	});
+	u5(u4:get().current);
+end;
+function v15.OnPrevious()
+	table.remove(u4, #u4);
+	u4:set(u4:get().previous);
+	u5(u4:get().current);
+end;
+v13[1] = v6(v14);
+v13[2] = v7(v15);
+v12[v8.Children] = v13;
+v8.New("ScreenGui")(v12);
+l__UserInputService__4.InputBegan:Connect(function(p10, p11)
+	if p11 then
+		return;
+	end;
+	if v3[l__LocalPlayer__2.UserId] == true then
+		if p10.KeyCode == Enum.KeyCode.C and l__UserInputService__4:IsKeyDown(Enum.KeyCode.LeftShift) then
+			if u2:get() == "AdminPanel" then
+				u2:set("None");
+				return;
+			else
+				u2:set("AdminPanel");
+				return;
+			end;
+		end;
+		if p10.KeyCode == Enum.KeyCode.L and l__UserInputService__4:IsKeyDown(Enum.KeyCode.LeftShift) then
+			if u2:get() == "AdminLogs" then
+				u2:set("None");
+				return;
+			end;
+			u2:set("AdminLogs");
+		end;
+	end;
+end);
+l__LocalPlayer__2.PlayerGui:WaitForChild("ScreenGui");
+v8.Compat(u2):onChange(function()
+	l__LocalPlayer__2.PlayerGui.ScreenGui.PanelPicker.Visible = u2:get() == "Picker";
+	if u2:get() == "AdminLogs" and #u3:get() == 0 then
+		u6();
+	end;
+end);
+l__LocalPlayer__2.PlayerGui.ScreenGui.Buttons.Admin.Visible = true;
+l__LocalPlayer__2.PlayerGui.ScreenGui.Buttons.Admin.Activated:Connect(function()
+	if u2:get() ~= "None" then
+		u2:set("None");
+		return;
+	end;
+	u2:set("Picker");
+end);
+l__LocalPlayer__2.PlayerGui.ScreenGui.PanelPicker.Logs.Activated:Connect(function()
+	u2:set("AdminLogs");
+end);
+l__LocalPlayer__2.PlayerGui.ScreenGui.PanelPicker.Panel.Activated:Connect(function()
+	u2:set("AdminPanel");
+end);
