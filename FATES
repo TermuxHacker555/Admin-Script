@@ -1,0 +1,1796 @@
+if (not game:IsLoaded()) then
+    game.Loaded:Wait();
+end
+
+local UILibrary;
+local cloneref = cloneref or function(ref)
+	return ref;
+end
+local GetService = game.GetService
+local Services = setmetatable({}, {
+    __index = function(self, Property)
+        local Good, Service = pcall(GetService, game, Property);
+        if (Good) then
+            self[Property] = cloneref(Service);
+            return Service
+        end
+    end
+});
+
+local GetPlayers = Services.Players.GetPlayers
+local JSONEncode, JSONDecode, GenerateGUID = 
+    Services.HttpService.JSONEncode, 
+    Services.HttpService.JSONDecode,
+    Services.HttpService.GenerateGUID
+
+local GetPropertyChangedSignal, Changed = 
+    game.GetPropertyChangedSignal,
+    game.Changed
+
+local GetChildren, GetDescendants = game.GetChildren, game.GetDescendants
+local IsA = game.IsA
+local FindFirstChild, FindFirstChildWhichIsA, WaitForChild = 
+    game.FindFirstChild,
+    game.FindFirstChildWhichIsA,
+    game.WaitForChild
+
+local Tfind, sort, concat, pack, unpack;
+do
+    local table = table
+    Tfind, sort, concat, pack, unpack = 
+        table.find, 
+        table.sort,
+        table.concat,
+        table.pack,
+        table.unpack
+end
+
+local lower, Sfind, split, sub, format, len, match, gmatch, gsub, byte;
+do
+    local string = string
+    lower, Sfind, split, sub, format, len, match, gmatch, gsub, byte = 
+        string.lower,
+        string.find,
+        string.split, 
+        string.sub,
+        string.format,
+        string.len,
+        string.match,
+        string.gmatch,
+        string.gsub,
+        string.byte
+end
+
+local random, floor, round, abs, atan, cos, sin, rad;
+do
+    local math = math
+    random, floor, round, abs, atan, cos, sin, rad, clamp = 
+        math.random,
+        math.floor,
+        math.round,
+        math.abs,
+        math.atan,
+        math.cos,
+        math.sin,
+        math.rad,
+        math.clamp
+end
+
+local Instancenew = Instance.new
+local Vector3new = Vector3.new
+local Vector2new = Vector2.new
+local UDim2new = UDim2.new
+local UDimnew = UDim.new
+local CFramenew = CFrame.new
+local BrickColornew = BrickColor.new
+local Drawingnew = Drawing.new
+local Color3new = Color3.new
+local Color3fromRGB = Color3.fromRGB
+local Color3fromHSV = Color3.fromHSV
+local ToHSV = Color3new().ToHSV
+
+local Camera = Services.Workspace.CurrentCamera
+local WorldToViewportPoint = Camera.WorldToViewportPoint
+local GetPartsObscuringTarget = Camera.GetPartsObscuringTarget
+
+local LocalPlayer = Services.Players.LocalPlayer
+local Mouse = LocalPlayer and LocalPlayer.GetMouse(LocalPlayer);
+
+local Destroy, Clone = game.Destroy, game.Clone
+
+local Connection = game.Loaded
+local CWait = Connection.Wait
+local CConnect = Connection.Connect
+
+local Disconnect;
+do
+    local CalledConnection = CConnect(Connection, function() end);
+    Disconnect = CalledConnection.Disconnect
+end
+
+local Connections = {}
+local AddConnection = function(...)
+    local ConnectionsToAdd = {...}
+    for i = 1, #ConnectionsToAdd do
+        Connections[#Connections + 1] = ConnectionsToAdd[i]
+    end
+    return ...
+end
+
+local UIElements = Services.InsertService:LoadLocalAsset("rbxassetid://6945229203");
+local GuiObjects = UIElements.GuiObjects
+
+local Colors = {
+	PageTextPressed = Color3fromRGB(200, 200, 200);
+	PageBackgroundPressed = Color3fromRGB(15, 15, 15);
+	PageBorderPressed = Color3fromRGB(20, 20, 20);
+	PageTextHover = Color3fromRGB(175, 175, 175);
+	PageBackgroundHover = Color3fromRGB(16, 16, 16);
+	PageTextIdle = Color3fromRGB(150, 150, 150);
+	PageBackgroundIdle = Color3fromRGB(18, 18, 18);
+	PageBorderIdle = Color3fromRGB(18, 18, 18);
+	ElementBackground = Color3fromRGB(25, 25, 25);
+}
+
+local Debounce = function(Func)
+	local Debounce_ = false
+	return function(...)
+		if (not Debounce_) then
+			Debounce_ = true
+			Func(...);
+			Debounce_ = false
+		end
+	end
+end
+
+
+local Utils = {}
+
+Utils.SmoothScroll = function(content, SmoothingFactor)
+	content.ScrollingEnabled = false
+
+	local input = Clone(content);
+
+	input.ClearAllChildren(input);
+	input.BackgroundTransparency = 1
+	input.ScrollBarImageTransparency = 1
+	input.ZIndex = content.ZIndex + 1
+	input.Name = "_smoothinputframe"
+	input.ScrollingEnabled = true
+	input.Parent = content.Parent
+
+	local function syncProperty(prop)
+        AddConnection(CConnect(GetPropertyChangedSignal(content, prop), function()
+			if prop == "ZIndex" then
+				input[prop] = content[prop] + 1
+			else
+				input[prop] = content[prop]
+			end
+		end));
+	end
+
+	syncProperty "CanvasSize"
+	syncProperty "Position"
+	syncProperty "Rotation"
+	syncProperty "ScrollingDirection"
+	syncProperty "ScrollBarThickness"
+	syncProperty "BorderSizePixel"
+	syncProperty "ElasticBehavior"
+	syncProperty "SizeConstraint"
+	syncProperty "ZIndex"
+	syncProperty "BorderColor3"
+	syncProperty "Size"
+	syncProperty "AnchorPoint"
+	syncProperty "Visible"
+
+	local smoothConnection = AddConnection(CConnect(Services.RunService.RenderStepped, function()
+		local a = content.CanvasPosition
+		local b = input.CanvasPosition
+		local c = SmoothingFactor
+		local d = (b - a) * c + a
+
+		content.CanvasPosition = d
+	end));
+
+	AddConnection(CConnect(content.AncestryChanged, function()
+		if content.Parent == nil then
+			Destroy(input);
+			Disconnect(smoothConnection);
+		end
+	end));
+end
+
+do
+    local TweenService = Services.TweenService
+    Utils.Tween = function(Object, Style, Direction, Time, Goal)
+        local TInfo = TweenInfo.new(Time, Enum.EasingStyle[Style], Enum.EasingDirection[Direction])
+        local Tween = TweenService.Create(TweenService, Object, TInfo, Goal)
+        Tween.Play(Tween);
+        return Tween
+    end
+end
+
+Utils.MultColor3 = function(Color, Delta)
+	return Color3new(clamp(Color.R * Delta, 0, 1), clamp(Color.G * Delta, 0, 1), clamp(Color.B * Delta, 0, 1))
+end
+
+Utils.Draggable = function(UI, DragUi)
+	local DragSpeed = 0
+	local StartPos
+	local DragToggle, DragInput, DragStart
+
+	if not DragUi then
+		DragUi = UI
+	end
+
+	local function UpdateInput(Input)
+		local Delta = Input.Position - DragStart
+		local Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + Delta.X, StartPos.Y.Scale, StartPos.Y.Offset + Delta.Y);
+
+		Utils.Tween(UI, "Linear", "Out", .25, {
+			Position = Position
+		});
+	end
+    local CoreGui = Services.CoreGui
+    local UserInputService = Services.UserInputService
+
+	AddConnection(CConnect(UI.InputBegan, function(Input)
+		if ((Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch) and not UserInputService.GetFocusedTextBox(UserInputService)) then
+			DragToggle = true
+			DragStart = Input.Position
+			StartPos = UI.Position
+
+			local Objects = CoreGui.GetGuiObjectsAtPosition(CoreGui, DragStart.X, DragStart.Y);
+
+			AddConnection(CConnect(Input.Changed, function()
+				if (Input.UserInputState == Enum.UserInputState.End) then
+					DragToggle = false
+				end
+			end));
+		end
+	end));
+
+	AddConnection(CConnect(UI.InputChanged, function(Input)
+		if (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+			DragInput = Input
+		end
+	end));
+
+	AddConnection(CConnect(UserInputService.InputChanged, function(Input)
+		if (Input == DragInput and DragToggle) then
+			UpdateInput(Input);
+		end
+	end));
+end
+
+Utils.Click = function(Object, Goal)
+	local Hover = {
+		[Goal] = Utils.MultColor3(Object[Goal], 0.9);
+	}
+
+	local Press = {
+		[Goal] = Utils.MultColor3(Object[Goal], 1.2);
+	}
+
+	local Origin = {
+		[Goal] = Object[Goal]
+	}
+
+	AddConnection(CConnect(Object.MouseEnter, function()
+		Utils.Tween(Object, "Quad", "Out", .25, Hover);
+	end))
+
+	AddConnection(CConnect(Object.MouseLeave, function()
+		Utils.Tween(Object, "Quad", "Out", .25, Origin);
+	end));
+
+	AddConnection(CConnect(Object.MouseButton1Down, function()
+		Utils.Tween(Object, "Quad", "Out", .3, Press);
+	end));
+
+    AddConnection(CConnect(Object.MouseButton1Up, function()
+		Utils.Tween(Object, "Quad", "Out", .4, Hover);
+	end));
+end
+
+Utils.Hover = function(Object, Goal)
+	local Hover = {
+		[Goal] = Utils.MultColor3(Object[Goal], 0.9);
+	}
+
+	local Origin = {
+		[Goal] = Object[Goal]
+	}
+
+	AddConnection(CConnect(Object.MouseEnter, function()
+		Utils.Tween(Object, "Sine", "Out", .5, Hover);
+	end));
+
+	AddConnection(CConnect(Object.MouseLeave, function()
+		Utils.Tween(Object, "Sine", "Out", .5, Origin);
+	end));
+end
+
+Utils.Blink = function(Object, Goal, Color1, Color2, Time)
+	local Normal = {
+		[Goal] = Color1
+	}
+
+	local Blink = {
+		[Goal] = Color2
+	}
+
+	CThread(function()
+		local T1 = Utils.Tween(Object, "Quad", "Out", Time, Blink).Completed
+        T1.Wait(T1);
+        local T2 = Utils.Tween(Object, "Quad", "Out", Time, Normal);
+	end)()
+end
+
+Utils.TweenTrans = function(Object, Transparency)
+	local Properties = {
+		TextBox = "TextTransparency",
+		TextLabel = "TextTransparency",
+		TextButton = "TextTransparency",
+		ImageButton = "ImageTransparency",
+		ImageLabel = "ImageTransparency"
+	}
+
+    local Descendants = GetDescendants(Object);
+	for i = 1, #Descendants do
+        local Instance_ = Descendants[i]
+		if (IsA(Instance_, "GuiObject")) then
+			for Class, Property in next, Properties do
+				if (IsA(Instance_, Class) and Instance_[Property] ~= 1) then
+					Utils.Tween(Instance_, "Quad", "Out", .5, {
+						[Property] = Transparency
+					});
+					break
+				end
+			end
+			if Instance_.Name == "Overlay" and Transparency == 0 then -- check for overlay
+				Utils.Tween(Object, "Quad", "Out", .5, {
+					BackgroundTransparency = .5
+				});
+			elseif (Instance_.BackgroundTransparency ~= 1) then
+				Utils.Tween(Instance_, "Quad", "Out", .5, {
+					BackgroundTransparency = Transparency
+				});
+			end
+		end
+	end
+
+	return Utils.Tween(Object, "Quad", "Out", .5, {
+		BackgroundTransparency = Transparency
+	});
+end
+
+Utils.Intro = function(Object)
+	local Frame = Instancenew("Frame")
+	local UICorner = Instancenew("UICorner")
+	local CornerRadius = Object:FindFirstChild("UICorner") and Object.UICorner.CornerRadius or UDim.new(0, 0)
+
+	Frame.Name = "IntroFrame"
+	Frame.ZIndex = 1000
+	Frame.Size = UDim2.fromOffset(Object.AbsoluteSize.X, Object.AbsoluteSize.Y)
+	Frame.AnchorPoint = Vector2.new(.5, .5)
+	Frame.Position = UDim2.new(Object.Position.X.Scale, Object.Position.X.Offset + (Object.AbsoluteSize.X / 2), Object.Position.Y.Scale, Object.Position.Y.Offset + (Object.AbsoluteSize.Y / 2))
+	Frame.BackgroundColor3 = Object.BackgroundColor3
+	Frame.BorderSizePixel = 0
+
+	UICorner.CornerRadius = CornerRadius
+	UICorner.Parent = Frame
+
+	Frame.Parent = Object.Parent
+
+	if (Object.Visible) then
+		Frame.BackgroundTransparency = 1
+
+		local Tween = Utils.Tween(Frame, "Quad", "Out", .25, {
+			BackgroundTransparency = 0
+		});
+
+        CWait(Tween.Completed);
+		Object.Visible = false
+
+		local Tween = Utils.Tween(Frame, "Quad", "Out", .25, {
+			Size = UDim2.fromOffset(0, 0);
+		});
+
+		Utils.Tween(UICorner, "Quad", "Out", .25, {
+			CornerRadius = UDimnew(1, 0);
+		});
+
+		CWait(Tween.Completed);
+		Destroy(Frame);
+	else
+		Frame.Visible = true
+		Frame.Size = UDim2.fromOffset(0, 0)
+		UICorner.CornerRadius = UDimnew(1, 0)
+
+		local Tween = Utils.Tween(Frame, "Quad", "Out", .25, {
+			Size = UDim2.fromOffset(Object.AbsoluteSize.X, Object.AbsoluteSize.Y);
+		});
+
+		Utils.Tween(UICorner, "Quad", "Out", .25, {
+			CornerRadius = CornerRadius
+		});
+
+		CWait(Tween.Completed);
+		Object.Visible = true
+
+		local Tween = Utils.Tween(Frame, "Quad", "Out", .25, {
+			BackgroundTransparency = 1
+		});
+
+		CWait(Tween.Completed);
+		Destroy(Frame);
+	end
+end
+
+Utils.MakeGradient = function(ColorTable)
+	local Table = {}
+    local ColorSequenceKeypointNew = ColorSequenceKeypoint.new
+	for Time, Color in next, ColorTable do
+		Table[#Table + 1] = ColorSequenceKeypointNew(Time - 1, Color);
+	end
+	return ColorSequence.new(Table)
+end
+
+local UILibrary = {}
+UILibrary.__index = UILibrary
+
+UILibrary.new = function(ColorTheme)
+	assert(typeof(ColorTheme) == "Color3", "[UI] ColorTheme must be a Color3.");
+	local NewUI = {}
+	local UI = Instancenew("ScreenGui");
+	setmetatable(NewUI, UILibrary);
+	NewUI.UI = UI
+	NewUI.ColorTheme = ColorTheme
+	
+	return NewUI
+end
+
+function UILibrary:LoadWindow(Title, Size)
+	local Window = Clone(GuiObjects.Load.Window);
+	local Main = Window.Main
+	local Overlay = Main.Overlay
+	local OverlayMain = Overlay.Main
+	local ColorPicker = OverlayMain.ColorPicker
+	local Settings = OverlayMain.Settings
+	local ClosePicker = OverlayMain.Close
+	local ColorCanvas = ColorPicker.ColorCanvas
+	local ColorSlider = ColorPicker.ColorSlider
+	local ColorGradient = ColorCanvas.ColorGradient
+	local DarkGradient = ColorGradient.DarkGradient
+	local CanvasBar = ColorGradient.Bar
+	local RainbowGradient = ColorSlider.RainbowGradient
+	local SliderBar = RainbowGradient.Bar
+	local CanvasHitbox = ColorCanvas.Hitbox
+	local SliderHitbox = ColorSlider.Hitbox
+	local ColorPreview = Settings.ColorPreview
+	local ColorOptions = Settings.Options
+	local RedTextBox = ColorOptions.Red.TextBox
+	local BlueTextBox = ColorOptions.Blue.TextBox
+	local GreenTextBox = ColorOptions.Green.TextBox
+	local RainbowToggle = ColorOptions.Rainbow
+	Utils.Click(OverlayMain.Close, "BackgroundColor3");
+
+	Window.Size = Size
+	Window.Position = UDim2new(0.5, -Size.X.Offset / 2, 0.5, -Size.Y.Offset / 2);
+	Window.Main.Title.Text = Title
+	Window.Parent = self.UI
+
+	Utils.Draggable(Window);
+
+	local Idle = false
+	local LeftWindow = false
+	local Timer = tick();
+	AddConnection(CConnect(Window.MouseEnter, function()
+		LeftWindow = false
+		if Idle then
+			Idle = false
+			Utils.TweenTrans(Window, 0)
+		end
+	end));
+	AddConnection(CConnect(Window.MouseLeave, function()
+		LeftWindow = true
+		Timer = tick();
+	end))
+
+	AddConnection(CConnect(Services.RunService.RenderStepped, function()
+		if LeftWindow then
+			local Time = tick() - Timer
+			if Time >= 3 and not Idle then
+				Utils.TweenTrans(Window, .75);
+				Idle = true
+			end
+		end
+	end));
+
+
+	local WindowLibrary = {}
+	local PageCount = 0
+	local SelectedPage
+
+	WindowLibrary.GetPosition = function()
+		return Window.Position
+	end
+	WindowLibrary.SetPosition = function(NewPos)
+		Window.Position = NewPos
+	end
+
+	function WindowLibrary.NewPage(Title)
+		local Page = Clone(GuiObjects.New.Page);
+		local TextButton = Clone(GuiObjects.New.TextButton);
+
+		if (PageCount == 0) then
+			TextButton.TextColor3 = Colors.PageTextPressed
+			TextButton.BackgroundColor3 = Colors.PageBackgroundPressed
+			TextButton.BorderColor3 = Colors.PageBorderPressed
+			SelectedPage = Page
+		end
+
+		AddConnection(CConnect(TextButton.MouseEnter, function()
+			if (SelectedPage.Name ~= TextButton.Name) then
+				Utils.Tween(TextButton, "Quad", "Out", .25, {
+					TextColor3 = Colors.PageTextHover;
+					BackgroundColor3 = Colors.PageBackgroundHover;
+					BorderColor3 = Colors.PageBorderHover;
+				});
+			end
+		end));
+
+		AddConnection(CConnect(TextButton.MouseLeave, function()
+			if (SelectedPage.Name ~= TextButton.Name) then
+				Utils.Tween(TextButton, "Quad", "Out", .25, {
+					TextColor3 = Colors.PageTextIdle;
+					BackgroundColor3 = Colors.PageBackgroundIdle;
+					BorderColor3 = Colors.PageBackgroundIdle;
+				});
+			end
+		end));
+
+		AddConnection(CConnect(TextButton.MouseButton1Down, function()
+			if (SelectedPage.Name ~= TextButton.Name) then
+				Utils.Tween(TextButton, "Quad", "Out", .25, {
+					TextColor3 = Colors.PageTextPressed;
+				});
+			end
+		end));
+
+		AddConnection(CConnect(TextButton.MouseButton1Click, function()
+			if (SelectedPage.Name ~= TextButton.Name) then
+				Utils.Tween(TextButton, "Quad", "Out", .25, {
+					TextColor3 = Colors.PageTextPressed;
+					BackgroundColor3 = Colors.PageBackgroundPressed;
+					BorderColor3 = Colors.PageBorderPressed;
+				});
+
+				Utils.Tween(Window.Main.Selection[SelectedPage.Name], "Quad", "Out", .25, {
+					TextColor3 = Colors.PageTextIdle;
+					BackgroundColor3 = Colors.PageBackgroundIdle;
+					BorderColor3 = Colors.PageBackgroundIdle;
+				});
+
+				SelectedPage = Page
+				Window.Main.Container.UIPageLayout:JumpTo(SelectedPage)
+			end
+		end));
+
+
+		Page.Name = Title
+		TextButton.Name = Title
+		TextButton.Text = Title
+
+		Page.Parent = Window.Main.Container
+		TextButton.Parent = Window.Main.Selection
+
+		PageCount = PageCount + 1
+
+		local PageLibrary = {}
+
+		function PageLibrary.NewSection(Title)
+			local Section = GuiObjects.Section.Container:Clone()
+			local SectionOptions = Section.Options
+			local SectionUIListLayout = Section.Options.UIListLayout
+
+			-- Utils.SmoothScroll(Section.Options, .14)
+			Section.Title.Text = Title
+			Section.Parent = Page.Selection
+
+			AddConnection(CConnect(GetPropertyChangedSignal(SectionUIListLayout, "AbsoluteContentSize"), function()
+				SectionOptions.CanvasSize = UDim2.fromOffset(0, SectionUIListLayout.AbsoluteContentSize.Y + 5)
+			end))
+
+			local ElementLibrary = {}
+
+
+			local function ToggleFunction(Container, Enabled, Callback) -- fpr color picker
+				local Switch = Container.Switch
+				local Hitbox = Container.Hitbox
+				Container.BackgroundColor3 = self.ColorTheme
+
+				if (not Enabled) then
+					Switch.Position = UDim2.fromOffset(2, 2);
+					Container.BackgroundColor3 = Colors.ElementBackground
+				end
+
+				AddConnection(CConnect(Hitbox.MouseButton1Click, function()
+					Enabled = not Enabled
+
+					Utils.Tween(Switch, "Quad", "Out", .25, {
+						Position = Enabled and UDim2.new(1, -18, 0, 2) or UDim2.fromOffset(2, 2)
+					});
+					Utils.Tween(Container, "Quad", "Out", .25, {
+						BackgroundColor3 = Enabled and self.ColorTheme or Colors.ElementBackground
+					});
+
+					Callback(Enabled);
+				end));
+			end
+
+
+			function ElementLibrary.Toggle(Title, Enabled, Callback)
+				local Toggle = Clone(GuiObjects.Elements.Toggle);
+				local Container = Toggle.Container
+				ToggleFunction(Container, Enabled, Callback);
+
+				Toggle.Title.Text = Title
+				Toggle.Parent = Section.Options
+			end
+
+
+			function ElementLibrary.Slider(Title, Args, Callback)
+				local Slider = Clone(GuiObjects.Elements.Slider);
+				local Container = Slider.Container
+				local ContainerSliderBar = Container.SliderBar
+				local BarFrame = ContainerSliderBar.BarFrame
+				local Bar = BarFrame.Bar
+				local Label = Bar.Label
+				local Hitbox = Container.Hitbox
+
+				Bar.BackgroundColor3 = self.ColorTheme
+				Bar.Size = UDim2.fromScale(Args.Default / Args.Max, 1);
+				Label.Text = tostring(Args.Default);
+				Label.BackgroundTransparency = 1
+				Label.TextTransparency = 1
+				Container.Min.Text = tostring(Args.Min);
+				Container.Max.Text = tostring(Args.Max);
+				Slider.Title.Text = Title
+
+				local Moving = false
+
+				local function Update()
+					local RightBound = BarFrame.AbsoluteSize.X
+					local Position = clamp(Mouse.X - BarFrame.AbsolutePosition.X, 0, RightBound);
+					local Value = Args.Min + (Args.Max - Args.Min) * (Position / RightBound) -- get difference then add min value, lol lerp
+
+					Value = Value - (Value % Args.Step);
+					Callback(Value);
+
+					local Precent = Value / Args.Max
+					local Size = UDim2.fromScale(Precent, 1);
+					local Tween = Utils.Tween(Bar, "Linear", "Out", .05, {
+						Size = Size
+					});
+
+					Label.Text = Value
+					CWait(Tween.Completed);
+				end
+
+				AddConnection(CConnect(Hitbox.MouseButton1Down, function()
+					Moving = true
+
+					Utils.Tween(Label, "Quad", "Out", .25, {
+						BackgroundTransparency = 0;
+						TextTransparency = 0;
+					});
+
+					Update();
+				end))
+
+				AddConnection(CConnect(Services.UserInputService.InputEnded, function(Input)
+					if (Input.UserInputType == Enum.UserInputType.MouseButton1 and Moving) then
+						Moving = false
+
+						Utils.Tween(Label, "Quad", "Out", .25, {
+							BackgroundTransparency = 1;
+							TextTransparency = 1;
+						});
+					end
+				end));
+
+				AddConnection(CConnect(Mouse.Move, Debounce(function()
+					if Moving then
+						Update()
+					end
+				end)))
+
+				Slider.Parent = Section.Options
+			end
+
+			function ElementLibrary.ColorPicker(Title, DefaultColor, Callback)
+				local SelectColor = Clone(GuiObjects.Elements.SelectColor);
+				local CurrentColor = DefaultColor
+				local Button = SelectColor.Button
+
+				local H, S, V = DefaultColor.ToHSV(DefaultColor);
+				local Opened = false
+				local Rainbow = false
+
+				local function UpdateText()
+					RedTextBox.PlaceholderText = tostring(floor(CurrentColor.R * 255));
+					GreenTextBox.PlaceholderText = tostring(floor(CurrentColor.G * 255));
+					BlueTextBox.PlaceholderText = tostring(floor(CurrentColor.B * 255));
+				end
+
+				local function UpdateColor()
+					H, S, V = CurrentColor.ToHSV(CurrentColor);
+
+					SliderBar.Position = UDim2new(0, 0, H, 2);
+					CanvasBar.Position = UDim2new(S, 2, 1 - V, 2);
+					ColorGradient.UIGradient.Color = Utils.MakeGradient({
+						[1] = Color3new(1, 1, 1);
+						[2] = Color3fromHSV(H, 1, 1);
+					});
+
+					ColorPreview.BackgroundColor3 = CurrentColor
+					UpdateText();
+				end
+
+				local function UpdateHue(Hue)
+					SliderBar.Position = UDim2.new(0, 0, Hue, 2)
+					ColorGradient.UIGradient.Color = Utils.MakeGradient({
+						[1] = Color3.new(1, 1, 1);
+						[2] = Color3.fromHSV(Hue, 1, 1);
+					});
+
+					ColorPreview.BackgroundColor3 = CurrentColor
+					UpdateText();
+				end
+
+				local function ColorSliderInit()
+					local Moving = false
+
+					local function Update()
+						if Opened and not Rainbow then
+							local LowerBound = SliderHitbox.AbsoluteSize.Y
+							local Position = math.clamp(Mouse.Y - SliderHitbox.AbsolutePosition.Y, 0, LowerBound);
+							local Value = Position / LowerBound
+
+							H = Value
+							CurrentColor = Color3.fromHSV(H, S, V);
+							ColorPreview.BackgroundColor3 = CurrentColor
+							ColorGradient.UIGradient.Color = Utils.MakeGradient({
+								[1] = Color3.new(1, 1, 1);
+								[2] = Color3.fromHSV(H, 1, 1);
+							});
+
+							UpdateText();
+
+							local Position = UDim2.new(0, 0, Value, 2)
+							local Tween = Utils.Tween(SliderBar, "Linear", "Out", .05, {
+								Position = Position
+							});
+
+							Callback(CurrentColor);
+							CWait(Tween.Completed);
+						end
+					end
+
+					AddConnection(CConnect(SliderHitbox.MouseButton1Down, function()
+						Moving = true
+						Update();
+					end));
+
+					AddConnection(CConnect(Services.UserInputService.InputEnded, function(Input)
+						if (Input.UserInputType == Enum.UserInputType.MouseButton1 and Moving) then
+							Moving = false
+						end
+					end));
+
+					AddConnection(CConnect(Mouse.Move, Debounce(function()
+						if Moving then
+							Update();
+						end
+					end)));
+				end
+				local function ColorCanvasInit()
+					local Moving = false
+
+					local function Update()
+						if Opened then
+							local LowerBound = CanvasHitbox.AbsoluteSize.Y
+							local YPosition = clamp(Mouse.Y - CanvasHitbox.AbsolutePosition.Y, 0, LowerBound)
+							local YValue = YPosition / LowerBound
+							local RightBound = CanvasHitbox.AbsoluteSize.X
+							local XPosition = clamp(Mouse.X - CanvasHitbox.AbsolutePosition.X, 0, RightBound)
+							local XValue = XPosition / RightBound
+
+							S = XValue
+							V = 1 - YValue
+
+							CurrentColor = Color3.fromHSV(H, S, V);
+							ColorPreview.BackgroundColor3 = CurrentColor
+							UpdateText();
+
+							local Position = UDim2.new(XValue, 2, YValue, 2);
+							local Tween = Utils.Tween(CanvasBar, "Linear", "Out", .05, {
+								Position = Position
+							});
+							Callback(CurrentColor);
+							CWait(Tween.Completed);
+						end
+					end
+
+					AddConnection(CConnect(CanvasHitbox.MouseButton1Down, function()
+						Moving = true
+						Update();
+					end));
+
+					AddConnection(CConnect(Services.UserInputService.InputEnded, function(Input)
+						if Input.UserInputType == Enum.UserInputType.MouseButton1 and Moving then
+							Moving = false
+						end
+					end));
+
+					AddConnection(CConnect(Mouse.Move, Debounce(function()
+						if Moving then
+							Update();
+						end
+					end)));
+				end
+
+				ColorSliderInit();
+				ColorCanvasInit();
+
+				AddConnection(CConnect(Button.MouseButton1Click, function()
+					if not Opened then
+						Opened = true
+						UpdateColor();
+						RainbowToggle.Container.Switch.Position = Rainbow and UDim2.new(1, -18, 0, 2) or UDim2.fromOffset(2, 2);
+						RainbowToggle.Container.BackgroundColor3 = Rainbow and self.ColorTheme or Colors.ElementBackground
+						Overlay.Visible = true
+						OverlayMain.Visible = false
+						Utils.Intro(OverlayMain);
+					end
+				end));
+
+				AddConnection(CConnect(ClosePicker.MouseButton1Click, Debounce(function()
+					Button.BackgroundColor3 = CurrentColor
+					Utils.Intro(OverlayMain);
+					Overlay.Visible = false
+					Opened = false
+				end)));
+
+				AddConnection(CConnect(RedTextBox.FocusLost, function()
+					if Opened then
+						local Number = tonumber(RedTextBox.Text)
+						if Number then
+							Number = clamp(floor(Number), 0, 255);
+							CurrentColor = Color3new(Number / 255, CurrentColor.G, CurrentColor.B);
+							UpdateColor();
+							RedTextBox.PlaceholderText = tostring(Number);
+							Callback(CurrentColor);
+						end
+						RedTextBox.Text = ""
+					end
+				end));
+
+				AddConnection(CConnect(GreenTextBox.FocusLost, function()
+					if Opened then
+						local Number = tonumber(GreenTextBox.Text)
+						if Number then
+							Number = clamp(floor(Number), 0, 255);
+							CurrentColor = Color3new(CurrentColor.R, Number / 255, CurrentColor.B);
+							UpdateColor();
+							GreenTextBox.PlaceholderText = tostring(Number);
+							Callback(CurrentColor);
+						end
+						GreenTextBox.Text = ""
+					end
+				end));
+
+				AddConnection(CConnect(BlueTextBox.FocusLost, function()
+					if Opened then
+						local Number = tonumber(BlueTextBox.Text);
+						if Number then
+							Number = clamp(floor(Number), 0, 255);
+							CurrentColor = Color3new(CurrentColor.R, CurrentColor.G, Number / 255);
+							UpdateColor();
+							BlueTextBox.PlaceholderText = tostring(Number);
+							Callback(CurrentColor);
+						end
+						BlueTextBox.Text = ""
+					end
+				end));
+
+				ToggleFunction(RainbowToggle.Container, false, function(Callback)
+					if Opened then
+						Rainbow = Callback
+					end
+				end);
+
+				AddConnection(CConnect(Services.RunService.RenderStepped, function()
+					if Rainbow then
+						local Hue = (tick() / 5) % 1
+						CurrentColor = Color3.fromHSV(Hue, S, V);
+
+						if Opened then
+							UpdateHue(Hue);
+						end
+
+						Button.BackgroundColor3 = CurrentColor
+						Callback(CurrentColor);
+					end
+				end));
+
+				Button.BackgroundColor3 = DefaultColor
+				SelectColor.Title.Text = Title
+				SelectColor.Parent = Section.Options
+			end
+
+			function ElementLibrary.Dropdown(Title, Options, Callback)
+				local DropdownElement = GuiObjects.Elements.Dropdown.DropdownElement:Clone()
+				local DropdownSelection = GuiObjects.Elements.Dropdown.DropdownSelection:Clone()
+				local TextButton = GuiObjects.Elements.Dropdown.TextButton
+				local Button = DropdownElement.Button
+				local Opened = false
+				local Size = (TextButton.Size.Y.Offset + 5) * #Options
+
+				local function ToggleDropdown()
+					Opened = not Opened
+
+					if (Opened) then
+						DropdownSelection.Frame.Visible = true
+						DropdownSelection.Visible = true
+
+						Utils.Tween(DropdownSelection, "Quad", "Out", .25, {
+							Size = UDim2.new(1, -10, 0, Size)
+						});
+						Utils.Tween(DropdownElement.Button, "Quad", "Out", .25, {
+							Rotation = 180
+						});
+					else
+						Utils.Tween(DropdownElement.Button, "Quad", "Out", .25, {
+							Rotation = 0
+						});
+						CWait(Utils.Tween(DropdownSelection, "Quad", "Out", .25, {
+							Size = UDim2.new(1, -10, 0, 0)
+						}).Completed);
+
+						DropdownSelection.Frame.Visible = false
+						DropdownSelection.Visible = false
+					end
+				end
+
+				for _, v in next, Options do
+					local Clone = Clone(TextButton);
+
+					AddConnection(CConnect(Clone.MouseButton1Click, function()
+						DropdownElement.Title.Text = Title .. ": " .. v
+						Callback(v);
+						ToggleDropdown();
+					end));
+
+					Utils.Click(Clone, "BackgroundColor3");
+					Clone.Text = v
+					Clone.Parent = DropdownSelection.Container
+				end
+
+				AddConnection(CConnect(Button.MouseButton1Click, ToggleDropdown));
+
+				DropdownElement.Title.Text = Title
+				DropdownSelection.Visible = false
+				DropdownSelection.Frame.Visible = false
+				DropdownSelection.Size = UDim2.new(1, -10, 0, 0)
+				DropdownElement.Parent = Section.Options
+				DropdownSelection.Parent = Section.Options
+			end
+
+			return ElementLibrary
+
+		end
+
+		return PageLibrary
+	end
+
+	return WindowLibrary
+end
+
+print("UI Loaded...");
+
+return UILibrary
+
+local PlaceId = game.PlaceId
+
+local Players = game:GetService("Players");
+local HttpService = game:GetService("HttpService");
+local Workspace = game:GetService("Workspace");
+local Teams = game:GetService("Teams")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService");
+
+local CurrentCamera = Workspace.CurrentCamera
+local WorldToViewportPoint = CurrentCamera.WorldToViewportPoint
+local GetPartsObscuringTarget = CurrentCamera.GetPartsObscuringTarget
+
+local Inset = game:GetService("GuiService"):GetGuiInset().Y
+
+local FindFirstChild = game.FindFirstChild
+local FindFirstChildWhichIsA = game.FindFirstChildWhichIsA
+local IsA = game.IsA
+local Vector2new = Vector2.new
+local Vector3new = Vector3.new
+local CFramenew = CFrame.new
+local Color3new = Color3.new
+
+local Tfind = table.find
+local create = table.create
+local format = string.format
+local floor = math.floor
+local gsub = string.gsub
+local sub = string.sub
+local lower = string.lower
+local upper = string.upper
+local random = math.random
+
+local DefaultSettings = {
+    Esp = {
+        NamesEnabled = true,
+        DisplayNamesEnabled = false,
+        DistanceEnabled = true,
+        HealthEnabled = true,
+        TracersEnabled = false,
+        BoxEsp = false,
+        TeamColors = true,
+        Thickness = 1.5,
+        TracerThickness = 1.6,
+        Transparency = .9,
+        TracerTrancparency = .7,
+        Size = 16,
+        RenderDistance = 9e9,
+        Color = Color3.fromRGB(19, 130, 226),
+        OutlineColor = Color3new(),
+        TracerTo = "Head",
+        BlacklistedTeams = {}
+    },
+    Aimbot = {
+        Enabled = false,
+        SilentAim = false,
+        Wallbang = false,
+        ShowFov = false,
+        Snaplines = true,
+        ThirdPerson = false,
+        FirstPerson = false,
+        ClosestCharacter = false,
+        ClosestCursor = true,
+        Smoothness = 1,
+        SilentAimHitChance = 100,
+        FovThickness = 1,
+        FovTransparency = 1,
+        FovSize = 150,
+        FovColor = Color3new(1, 1, 1),
+        Aimlock = "Head",
+        SilentAimRedirect = "Head",
+        BlacklistedTeams = {}
+    },
+    WindowPosition = UDim2.new(0.5, -200, 0.5, -139);
+
+    Version = 1.2
+}
+
+local EncodeConfig, DecodeConfig;
+do
+    local deepsearchset;
+    deepsearchset = function(tbl, ret, value)
+        if (type(tbl) == 'table') then
+            local new = {}
+            for i, v in next, tbl do
+                new[i] = v
+                if (type(v) == 'table') then
+                    new[i] = deepsearchset(v, ret, value);
+                end
+                if (ret(i, v)) then
+                    new[i] = value(i, v);
+                end
+            end
+            return new
+        end
+    end
+
+    DecodeConfig = function(Config)
+        local DecodedConfig = deepsearchset(Config, function(Index, Value)
+            return type(Value) == "table" and (Value.HSVColor or Value.Position);
+        end, function(Index, Value)
+            local Color = Value.HSVColor
+            local Position = Value.Position
+            if (Color) then
+                return Color3.fromHSV(Color.H, Color.S, Color.V);
+            end
+            if (Position and Position.Y and Position.X) then
+                return UDim2.new(UDim.new(Position.X.Scale, Position.X.Offset), UDim.new(Position.Y.Scale, Position.Y.Offset));
+            else
+                return DefaultSettings.WindowPosition;
+            end
+        end);
+        return DecodedConfig
+    end
+
+    EncodeConfig = function(Config)
+        local ToHSV = Color3new().ToHSV
+        local EncodedConfig = deepsearchset(Config, function(Index, Value)
+            return typeof(Value) == "Color3" or typeof(Value) == "UDim2"
+        end, function(Index, Value)
+            local Color = typeof(Value) == "Color3"
+            local Position = typeof(Value) == "UDim2"
+            if (Color) then
+                local H, S, V = ToHSV(Value);
+                return { HSVColor = { H = H, S = S, V = V } };
+            end
+            if (Position) then
+                return { Position = {
+                    X = { Scale = Value.X.Scale, Offset = Value.X.Offset };
+                    Y = { Scale = Value.Y.Scale, Offset = Value.Y.Offset }
+                } };
+            end
+        end)
+        return EncodedConfig
+    end
+end
+
+local GetConfig = function()
+    local read, data = pcall(readfile, "fates-esp.json");
+    local canDecode, config = pcall(HttpService.JSONDecode, HttpService, data);
+    if (read and canDecode) then
+        local Decoded = DecodeConfig(config);
+        if (Decoded.Version ~= DefaultSettings.Version) then
+            local Encoded = HttpService:JSONEncode(EncodeConfig(DefaultSettings));
+            writefile("fates-esp.json", Encoded);
+            return DefaultSettings;
+        end
+        return Decoded;
+    else
+        local Encoded = HttpService:JSONEncode(EncodeConfig(DefaultSettings));
+        writefile("fates-esp.json", Encoded);
+        return DefaultSettings
+    end
+end
+
+local Settings = GetConfig();
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse();
+local MouseVector = Vector2new(Mouse.X, Mouse.Y);
+local Characters = {}
+
+local CustomGet = {
+    [0] = function()
+        return {}
+    end
+}
+
+local Get;
+if (CustomGet[PlaceId]) then
+    Get = CustomGet[PlaceId]();
+end
+
+local GetCharacter = function(Player)
+    if (Get) then
+        return Get.GetCharacter(Player);
+    end
+    return Player.Character
+end
+local CharacterAdded = function(Player, Callback)
+    if (Get) then
+        return
+    end
+    Player.CharacterAdded:Connect(Callback);
+end
+local CharacterRemoving = function(Player, Callback)
+    if (Get) then
+        return
+    end
+    Player.CharacterRemoving:Connect(Callback);
+end
+
+local GetTeam = function(Player)
+    if (Get) then
+        return Get.GetTeam(Player);
+    end
+    return Player.Team
+end
+
+local Drawings = {}
+
+local AimbotSettings = Settings.Aimbot
+local EspSettings = Settings.Esp
+
+local FOV = Drawing.new("Circle");
+FOV.Color = AimbotSettings.FovColor
+FOV.Thickness = AimbotSettings.FovThickness
+FOV.Transparency = AimbotSettings.FovTransparency
+FOV.Filled = false
+FOV.Radius = AimbotSettings.FovSize
+
+local Snaplines = Drawing.new("Line");
+Snaplines.Color = AimbotSettings.FovColor
+Snaplines.Thickness = .1
+Snaplines.Transparency = 1
+Snaplines.Visible = AimbotSettings.Snaplines
+
+table.insert(Drawings, FOV);
+table.insert(Drawings, Snaplines);
+
+local HandlePlayer = function(Player)
+    local Character = GetCharacter(Player);
+    if (Character) then
+        Characters[Player] = Character
+    end
+    CharacterAdded(Player, function(Char)
+        Characters[Player] = Char
+    end);
+    CharacterRemoving(Player, function(Char)
+        Characters[Player] = nil
+        local PlayerDrawings = Drawings[Player]
+        if (PlayerDrawings) then
+            PlayerDrawings.Text.Visible = false
+            PlayerDrawings.Box.Visible = false
+            PlayerDrawings.Tracer.Visible = false
+        end
+    end);
+
+    if (Player == LocalPlayer) then return; end
+
+    local Text = Drawing.new("Text");
+    Text.Color = EspSettings.Color
+    Text.OutlineColor = EspSettings.OutlineColor
+    Text.Size = EspSettings.Size
+    Text.Transparency = EspSettings.Transparency
+    Text.Center = true
+    Text.Outline = true
+
+    local Tracer = Drawing.new("Line");
+    Tracer.Color = EspSettings.Color
+    Tracer.From = Vector2new(CurrentCamera.ViewportSize.X / 2, CurrentCamera.ViewportSize.Y);
+    Tracer.Thickness = EspSettings.TracerThickness
+    Tracer.Transparency = EspSettings.TracerTrancparency
+
+    local Box = Drawing.new("Quad");
+    Box.Thickness = EspSettings.Thickness
+    Box.Transparency = EspSettings.Transparency
+    Box.Filled = false
+    Box.Color = EspSettings.Color
+
+    Drawings[Player] = { Text = Text, Tracer = Tracer, Box = Box }
+end
+
+for Index, Player in pairs(Players:GetPlayers()) do
+    HandlePlayer(Player);
+end
+Players.PlayerAdded:Connect(function(Player)
+    HandlePlayer(Player);
+end);
+
+Players.PlayerRemoving:Connect(function(Player)
+    Characters[Player] = nil
+    local PlayerDrawings = Drawings[Player]
+    for Index, Drawing in pairs(PlayerDrawings or {}) do
+        Drawing.Visible = false
+    end
+    Drawings[Player] = nil
+end);
+
+local SetProperties = function(Properties)
+    for Player, PlayerDrawings in pairs(Drawings) do
+        if (type(Player) ~= "number") then
+            for Property, Value in pairs(Properties.Tracer or {}) do
+                PlayerDrawings.Tracer[Property] = Value
+            end
+            for Property, Value in pairs(Properties.Text or {}) do
+                PlayerDrawings.Text[Property] = Value
+            end
+            for Property, Value in pairs(Properties.Box or {}) do
+                PlayerDrawings.Box[Property] = Value
+            end
+        end
+    end
+end
+
+
+local GetClosestPlayerAndRender = function()
+    MouseVector = Vector2new(Mouse.X, Mouse.Y + Inset);
+    local Closest = create(4);
+    local Vector2Distance = math.huge
+    local Vector3DistanceOnScreen = math.huge
+    local Vector3Distance = math.huge
+
+    if (AimbotSettings.ShowFov) then
+        FOV.Position = MouseVector
+        FOV.Visible = true
+        Snaplines.Visible = false
+    else
+        FOV.Visible = false
+    end
+
+    local LocalRoot = Characters[LocalPlayer] and FindFirstChild(Characters[LocalPlayer], "HumanoidRootPart");
+    for Player, Character in pairs(Characters) do
+        if (Player == LocalPlayer) then continue; end
+        local PlayerDrawings = Drawings[Player]
+        local PlayerRoot = FindFirstChild(Character, "HumanoidRootPart");
+        local PlayerTeam = GetTeam(Player);
+        if (PlayerRoot) then
+            local Redirect = FindFirstChild(Character, AimbotSettings.Aimlock);
+            if (not Redirect) then
+                PlayerDrawings.Text.Visible = false
+                PlayerDrawings.Box.Visible = false
+                PlayerDrawings.Tracer.Visible = false
+                continue;
+            end
+            local RedirectPos = Redirect.Position
+            local Tuple, Visible = WorldToViewportPoint(CurrentCamera, RedirectPos);
+            local CharacterVec2 = Vector2new(Tuple.X, Tuple.Y);
+            local Vector2Magnitude = (MouseVector - CharacterVec2).Magnitude
+            local Vector3Magnitude = LocalRoot and (RedirectPos - LocalRoot.Position).Magnitude or math.huge
+            local InRenderDistance = Vector3Magnitude <= EspSettings.RenderDistance
+
+            if (not Tfind(AimbotSettings.BlacklistedTeams, PlayerTeam)) then
+                local InFovRadius = Vector2Magnitude <= FOV.Radius
+                if (InFovRadius) then
+                    if (Visible and Vector2Magnitude <= Vector2Distance and AimbotSettings.ClosestCursor) then
+                        Vector2Distance = Vector2Magnitude
+                        Closest = {Character, CharacterVec2, Player, Redirect}
+                        if (AimbotSettings.Snaplines and AimbotSettings.ShowFov) then
+                            Snaplines.Visible = true
+                            Snaplines.From = MouseVector
+                            Snaplines.To = CharacterVec2
+                        else
+                            Snaplines.Visible = false
+                        end
+                    end
+
+                    if (Visible and Vector3Magnitude <= Vector3DistanceOnScreen and Settings.ClosestPlayer) then
+                        Vector3DistanceOnScreen = Vector3Magnitude
+                        Closest = {Character, CharacterVec2, Player, Redirect}
+                    end
+                end
+            end
+
+            if (InRenderDistance and Visible and not Tfind(EspSettings.BlacklistedTeams, PlayerTeam)) then
+                local CharacterHumanoid = FindFirstChildWhichIsA(Character, "Humanoid") or { Health = 0, MaxHealth = 0 };
+                PlayerDrawings.Text.Text = format("%s\n%s%s",
+                        EspSettings.NamesEnabled and Player.Name or "",
+                        EspSettings.DistanceEnabled and format("[%s]",
+                            floor(Vector3Magnitude)
+                        ) or "",
+                        EspSettings.HealthEnabled and format(" [%s/%s]",
+                            floor(CharacterHumanoid.Health),
+                            floor(CharacterHumanoid.MaxHealth)
+                        )  or ""
+                    );
+
+                PlayerDrawings.Text.Position = Vector2new(Tuple.X, Tuple.Y - 40);
+
+                if (EspSettings.TracersEnabled) then
+                    PlayerDrawings.Tracer.To = CharacterVec2
+                end
+
+                if (EspSettings.BoxEsp) then
+                    local Parts = {}
+                    for Index, Part in pairs(Character:GetChildren()) do
+                        if (IsA(Part, "BasePart")) then
+                            local ViewportPos = WorldToViewportPoint(CurrentCamera, Part.Position);
+                            Parts[Part] = Vector2new(ViewportPos.X, ViewportPos.Y);
+                        end
+                    end
+
+                    local Top, Bottom, Left, Right
+                    local Distance = math.huge
+                    local ClosestPart = nil
+                    for i2, Pos in next, Parts do
+                        local Mag = (Pos - Vector2new(Tuple.X, 0)).Magnitude;
+                        if (Mag <= Distance) then
+                            ClosestPart = Pos
+                            Distance = Mag
+                        end
+                    end
+                    Top = ClosestPart
+                    ClosestPart = nil
+                    Distance = math.huge
+                    for i2, Pos in next, Parts do
+                        local Mag = (Pos - Vector2new(Tuple.X, CurrentCamera.ViewportSize.Y)).Magnitude;
+                        if (Mag <= Distance) then
+                            ClosestPart = Pos
+                            Distance = Mag
+                        end
+                    end
+                    Bottom = ClosestPart
+                    ClosestPart = nil
+                    Distance = math.huge
+                    for i2, Pos in next, Parts do
+                        local Mag = (Pos - Vector2new(0, Tuple.Y)).Magnitude;
+                        if (Mag <= Distance) then
+                            ClosestPart = Pos
+                            Distance = Mag
+                        end
+                    end
+                    Left = ClosestPart
+                    ClosestPart = nil
+                    Distance = math.huge
+                    for i2, Pos in next, Parts do
+                        local Mag = (Pos - Vector2new(CurrentCamera.ViewportSize.X, Tuple.Y)).Magnitude;
+                        if (Mag <= Distance) then
+                            ClosestPart = Pos
+                            Distance = Mag
+                        end
+                    end
+                    Right = ClosestPart
+                    ClosestPart = nil
+                    Distance = math.huge
+
+                    PlayerDrawings.Box.PointA = Vector2new(Right.X, Top.Y);
+                    PlayerDrawings.Box.PointB = Vector2new(Left.X, Top.Y);
+                    PlayerDrawings.Box.PointC = Vector2new(Left.X, Bottom.Y);
+                    PlayerDrawings.Box.PointD = Vector2new(Right.X, Bottom.Y);
+                end
+
+                if (EspSettings.TeamColors) then
+                    local TeamColor;
+                    if (PlayerTeam) then
+                        local BrickTeamColor = PlayerTeam.TeamColor
+                        TeamColor = BrickTeamColor.Color
+                    else
+                        TeamColor = Color3new(0.639216, 0.635294, 0.647059);
+                    end
+                    PlayerDrawings.Text.Color = TeamColor
+                    PlayerDrawings.Box.Color = TeamColor
+                    PlayerDrawings.Tracer.Color = TeamColor
+                end
+
+                PlayerDrawings.Text.Visible = true
+                PlayerDrawings.Box.Visible = EspSettings.BoxEsp
+                PlayerDrawings.Tracer.Visible = EspSettings.TracersEnabled
+            else
+                PlayerDrawings.Text.Visible = false
+                PlayerDrawings.Box.Visible = false
+                PlayerDrawings.Tracer.Visible = false
+            end
+        else
+            PlayerDrawings.Text.Visible = false
+            PlayerDrawings.Box.Visible = false
+            PlayerDrawings.Tracer.Visible = false
+        end
+    end
+
+    return unpack(Closest);
+end
+
+local Locked, SwitchedCamera = false, false
+UserInputService.InputBegan:Connect(function(Inp)
+    if (AimbotSettings.Enabled and Inp.UserInputType == Enum.UserInputType.MouseButton2) then
+        Locked = true
+        if (AimbotSettings.FirstPerson and LocalPlayer.CameraMode ~= Enum.CameraMode.LockFirstPerson) then
+            LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
+            SwitchedCamera = true
+        end
+    end
+end);
+UserInputService.InputEnded:Connect(function(Inp)
+    if (AimbotSettings.Enabled and Inp.UserInputType == Enum.UserInputType.MouseButton2) then
+        Locked = false
+        if (SwitchedCamera) then
+            LocalPlayer.CameraMode = Enum.CameraMode.Classic
+        end
+    end
+end);
+
+local ClosestCharacter, Vector, Player, Aimlock;
+RunService.RenderStepped:Connect(function()
+    ClosestCharacter, Vector, Player, Aimlock = GetClosestPlayerAndRender();
+    if (Locked and AimbotSettings.Enabled and ClosestCharacter) then
+        if (AimbotSettings.FirstPerson) then
+            if (syn) then
+                CurrentCamera.CoordinateFrame = CFramenew(CurrentCamera.CoordinateFrame.p, Aimlock.Position);
+            else
+                mousemoverel((Vector.X - MouseVector.X) / AimbotSettings.Smoothness, (Vector.Y - MouseVector.Y) / AimbotSettings.Smoothness);
+            end
+        elseif (AimbotSettings.ThirdPerson) then
+            mousemoveabs(Vector.X, Vector.Y);
+        end
+    end
+end);
+
+local Hooks = {
+    HookedFunctions = {},
+    OldMetaMethods = {},
+    MetaMethodHooks = {},
+    HookedSignals = {}
+}
+
+local OtherDeprecated = {
+    children = "GetChildren"
+}
+
+local RealMethods = {}
+local FakeMethods = {}
+
+local HookedFunctions = Hooks.HookedFunctions
+local MetaMethodHooks = Hooks.MetaMethodHooks
+local OldMetaMethods = Hooks.OldMetaMethods
+
+local randomised = random(1, 10);
+local randomisedVector = Vector3new(random(1, 10), random(1, 10), random(1, 10));
+Mouse.Move:Connect(function()
+    randomised = random(1, 10);
+    randomisedVector = Vector3new(random(1, 10), random(1, 10), random(1, 10));
+end);
+
+local x = setmetatable({}, {
+    __index = function(...)
+        print("index", ...);
+    end,
+    __add = function(...)
+        print("add", ...);
+    end,
+    __sub = function(...)
+        print("sub", ...);
+    end,
+    __mul = function(...)
+        print("mul", ...);
+    end
+});
+
+MetaMethodHooks.Index = function(...)
+    local __Index = OldMetaMethods.__index
+
+    if (Player and Aimlock and ... == Mouse and not checkcaller()) then
+        local CallingScript = getfenv(2).script;
+        if (CallingScript.Name == "CallingScript") then
+            return __Index(...);
+        end
+
+        local _Mouse, Index = ...
+        if (type(Index) == 'string') then
+            Index = gsub(sub(Index, 0, 100), "%z.*", "");
+        end
+        local PassedChance = random(1, 100) < AimbotSettings.SilentAimHitChance
+        if (PassedChance and AimbotSettings.SilentAim) then
+            local Parts = GetPartsObscuringTarget(CurrentCamera, {CurrentCamera.CFrame.Position, Aimlock.Position}, {LocalPlayer.Character, ClosestCharacter});
+
+            Index = string.gsub(Index, "^%l", upper);
+            local Hit = #Parts == 0 or AimbotSettings.Wallbang
+            if (not Hit) then
+                return __Index(...);
+            end
+            if (Index == "Target") then
+                return Aimlock
+            end
+            if (Index == "Hit") then
+                local hit = __Index(...);
+                local pos = Aimlock.Position + randomisedVector / 10
+                return CFramenew(pos.X, pos.Y, pos.Z, unpack({hit:components()}, 4));
+            end
+            if (Index == "X") then
+                return Vector.X + randomised / 10
+            end
+            if (Index == "Y") then
+                return Vector.Y + randomised / 10
+            end
+        end
+    end
+
+    return __Index(...);
+end
+
+MetaMethodHooks.Namecall = function(...)
+    local __Namecall = OldMetaMethods.__namecall
+    local self = ...
+    local Method = gsub(getnamecallmethod() or "", "^%l", upper);
+    local Hooked = HookedFunctions[Method]
+    if (Hooked and self == Hooked[1]) then
+        return Hooked[3](...);
+    end
+
+    return __Namecall(...);
+end
+
+for MMName, MMFunc in pairs(MetaMethodHooks) do
+    local MetaMethod = string.format("__%s", string.lower(MMName));
+    Hooks.OldMetaMethods[MetaMethod] = hookmetamethod(game, MetaMethod, MMFunc);
+end
+
+HookedFunctions.FindPartOnRay = {Workspace, Workspace.FindPartOnRay, function(...)
+    local OldFindPartOnRay = HookedFunctions.FindPartOnRay[4]
+    if (AimbotSettings.SilentAim and Player and Aimlock and not checkcaller()) then
+        local PassedChance = random(1, 100) < AimbotSettings.SilentAimHitChance
+        if (ClosestCharacter and PassedChance) then
+            local Parts = GetPartsObscuringTarget(CurrentCamera, {CurrentCamera.CFrame.Position, Aimlock.Position}, {LocalPlayer.Character, ClosestCharacter});
+            if (#Parts == 0 or AimbotSettings.Wallbang) then
+                return Aimlock, Aimlock.Position + (Vector3new(random(1, 10), random(1, 10), random(1, 10)) / 10), Vector3new(0, 1, 0), Aimlock.Material
+            end
+        end
+    end
+    return OldFindPartOnRay(...);
+end};
+
+HookedFunctions.FindPartOnRayWithIgnoreList = {Workspace, Workspace.FindPartOnRayWithIgnoreList, function(...)
+    local OldFindPartOnRayWithIgnoreList = HookedFunctions.FindPartOnRayWithIgnoreList[4]
+    if (Player and Aimlock and not checkcaller()) then
+        local CallingScript = getcallingscript();
+        local PassedChance = random(1, 100) < AimbotSettings.SilentAimHitChance
+        if (CallingScript.Name ~= "ControlModule" and ClosestCharacter and PassedChance) then
+            local Parts = GetPartsObscuringTarget(CurrentCamera, {CurrentCamera.CFrame.Position, Aimlock.Position}, {LocalPlayer.Character, ClosestCharacter});
+            if (#Parts == 0 or AimbotSettings.Wallbang) then
+                return Aimlock, Aimlock.Position + (Vector3new(random(1, 10), random(1, 10), random(1, 10)) / 10), Vector3new(0, 1, 0), Aimlock.Material
+            end
+        end
+    end
+    return OldFindPartOnRayWithIgnoreList(...);
+end};
+
+for Index, Function in pairs(HookedFunctions) do
+    Function[4] = hookfunction(Function[2], Function[3]);
+end
+
+local MainUI = UILibrary.new(Color3.fromRGB(255, 79, 87));
+local Window = MainUI:LoadWindow('<font color="#ff4f57">fates</font> esp', UDim2.fromOffset(400, 279));
+local ESP = Window.NewPage("esp");
+local Aimbot = Window.NewPage("aimbot");
+local EspSettingsUI = ESP.NewSection("Esp");
+local TracerSettingsUI = ESP.NewSection("Tracers");
+local SilentAim = Aimbot.NewSection("Silent Aim");
+local Aimbot = Aimbot.NewSection("Aimbot");
+
+EspSettingsUI.Toggle("Show Names", EspSettings.NamesEnabled, function(Callback)
+    EspSettings.NamesEnabled = Callback
+end);
+EspSettingsUI.Toggle("Show Health", EspSettings.HealthEnabled, function(Callback)
+    EspSettings.HealthEnabled = Callback
+end);
+EspSettingsUI.Toggle("Show Distance", EspSettings.DistanceEnabled, function(Callback)
+    EspSettings.DistanceEnabled = Callback
+end);
+EspSettingsUI.Toggle("Box Esp", EspSettings.BoxEsp, function(Callback)
+    EspSettings.BoxEsp = Callback
+    SetProperties({ Box = { Visible = Callback } });
+end);
+EspSettingsUI.Slider("Render Distance", { Min = 0, Max = 50000, Default = math.clamp(EspSettings.RenderDistance, 0, 50000), Step = 10 }, function(Callback)
+    EspSettings.RenderDistance = Callback
+end);
+EspSettingsUI.Slider("Esp Size", { Min = 0, Max = 30, Default = EspSettings.Size, Step = 1}, function(Callback)
+    EspSettings.Size = Callback
+    SetProperties({ Text = { Size = Callback } });
+end);
+EspSettingsUI.ColorPicker("Esp Color", EspSettings.Color, function(Callback)
+    EspSettings.TeamColors = false
+    EspSettings.Color = Callback
+    SetProperties({ Box = { Color = Callback }, Text = { Color = Callback }, Tracer = { Color = Callback } });
+end);
+EspSettingsUI.Toggle("Team Colors", EspSettings.TeamColors, function(Callback)
+    EspSettings.TeamColors = Callback
+    if (not Callback) then
+        SetProperties({ Tracer = { Color = EspSettings.Color }; Box = { Color = EspSettings.Color }; Text = { Color = EspSettings.Color }  })
+    end
+end);
+EspSettingsUI.Dropdown("Teams", {"Allies", "Enemies", "All"}, function(Callback)
+    table.clear(EspSettings.BlacklistedTeams);
+    if (Callback == "Enemies") then
+        table.insert(EspSettings.BlacklistedTeams, LocalPlayer.Team);
+    end
+    if (Callback == "Allies") then
+        local AllTeams = Teams:GetTeams();
+        table.remove(AllTeams, table.find(AllTeams, LocalPlayer.Team));
+        EspSettings.BlacklistedTeams = AllTeams
+    end
+end);
+TracerSettingsUI.Toggle("Enable Tracers", EspSettings.TracersEnabled, function(Callback)
+    EspSettings.TracersEnabled = Callback
+    SetProperties({ Tracer = { Visible = Callback } });
+end);
+TracerSettingsUI.Dropdown("To", {"Head", "Torso"}, function(Callback)
+    AimbotSettings.Aimlock = Callback == "Torso" and "HumanoidRootPart" or Callback
+end);
+TracerSettingsUI.Dropdown("From", {"Top", "Bottom", "Left", "Right"}, function(Callback)
+    local ViewportSize = CurrentCamera.ViewportSize
+    local From = Callback == "Top" and Vector2new(ViewportSize.X / 2, ViewportSize.Y - ViewportSize.Y) or Callback == "Bottom" and Vector2new(ViewportSize.X / 2, ViewportSize.Y) or Callback == "Left" and Vector2new(ViewportSize.X - ViewportSize.X, ViewportSize.Y / 2) or Callback == "Right" and Vector2new(ViewportSize.X, ViewportSize.Y / 2);
+    EspSettings.TracerFrom = From
+    SetProperties({ Tracer = { From = From } });
+end);
+TracerSettingsUI.Slider("Tracer Transparency", {Min = 0, Max = 1, Default = EspSettings.TracerTrancparency, Step = .1}, function(Callback)
+    EspSettings.TracerTrancparency = Callback
+    SetProperties({ Tracer = { Transparency = Callback } });
+end);
+TracerSettingsUI.Slider("Tracer Thickness", {Min = 0, Max = 5, Default = EspSettings.TracerThickness, Step = .1}, function(Callback)
+    EspSettings.TracerThickness = Callback
+    SetProperties({ Tracer = { Thickness = Callback } });
+end);
+
+SilentAim.Toggle("Silent Aim", AimbotSettings.SilentAim, function(Callback)
+    AimbotSettings.SilentAim = Callback
+end);
+SilentAim.Toggle("Wallbang", AimbotSettings.Wallbang, function(Callback)
+    AimbotSettings.Wallbang = Callback
+end);
+SilentAim.Dropdown("Redirect", {"Head", "Torso"}, function(Callback)
+    AimbotSettings.SilentAimRedirect = Callback
+end);
+SilentAim.Slider("Hit Chance", {Min = 0, Max = 100, Default = AimbotSettings.SilentAimHitChance, Step = 1}, function(Callback)
+    AimbotSettings.SilentAimHitChance = Callback
+end);
+
+SilentAim.Dropdown("Lock Type", {"Closest Cursor", "Closest Player"}, function(Callback)
+    if (Callback == "Closest Cursor") then
+        AimbotSettings.ClosestCharacter = false
+        AimbotSettings.ClosestCursor = true
+    else
+        AimbotSettings.ClosestCharacter = true
+        AimbotSettings.ClosestCursor = false
+    end
+end);
+
+Aimbot.Toggle("Aimbot (M2)", AimbotSettings.Enabled, function(Callback)
+    AimbotSettings.Enabled = Callback
+    if (not AimbotSettings.FirstPerson and not AimbotSettings.ThirdPerson) then
+        AimbotSettings.FirstPerson = true
+    end
+end);
+Aimbot.Slider("Aimbot Smoothness", {Min = 1, Max = 10, Default = AimbotSettings.Smoothness, Step = .5}, function(Callback)
+    AimbotSettings.Smoothness = Callback
+end);
+local sortTeams = function(Callback)
+    table.clear(AimbotSettings.BlacklistedTeams);
+    if (Callback == "Enemies") then
+        table.insert(AimbotSettings.BlacklistedTeams, LocalPlayer.Team);
+    end
+    if (Callback == "Allies") then
+        local AllTeams = Teams:GetTeams();
+        table.remove(AllTeams, table.find(AllTeams, LocalPlayer.Team));
+        AimbotSettings.BlacklistedTeams = AllTeams
+    end
+end
+Aimbot.Dropdown("Team Target", {"Allies", "Enemies", "All"}, sortTeams);
+sortTeams("Enemies");
+Aimbot.Dropdown("Aimlock Type", {"Third Person", "First Person"}, function(callback)
+    if (callback == "Third Person") then
+        AimbotSettings.ThirdPerson = true
+        AimbotSettings.FirstPerson = false
+    else
+        AimbotSettings.ThirdPerson = false
+        AimbotSettings.FirstPerson = true
+    end
+end);
+
+Aimbot.Toggle("Show Fov", AimbotSettings.ShowFov, function(Callback)
+    AimbotSettings.ShowFov = Callback
+    FOV.Visible = Callback
+end);
+Aimbot.ColorPicker("Fov Color", AimbotSettings.FovColor, function(Callback)
+    AimbotSettings.FovColor = Callback
+    FOV.Color = Callback
+    Snaplines.Color = Callback
+end);
+Aimbot.Slider("Fov Size", {Min = 70, Max = 500, Default = AimbotSettings.FovSize, Step = 10}, function(Callback)
+    AimbotSettings.FovSize = Callback
+    FOV.Radius = Callback
+end);
+Aimbot.Toggle("Enable Snaplines", AimbotSettings.Snaplines, function(Callback)
+    AimbotSettings.Snaplines = Callback
+end);
+Window.SetPosition(Settings.WindowPosition);
+
+if (gethui) then
+    MainUI.UI.Parent = gethui();
+else
+    local protect_gui = (syn or getgenv()).protect_gui
+    if (protect_gui) then
+        protect_gui(MainUI.UI);
+    end
+    MainUI.UI.Parent = game:GetService("CoreGui");
+end
+
+while wait(5) do
+    Settings.WindowPosition = Window.GetPosition();
+    local Encoded = HttpService:JSONEncode(EncodeConfig(Settings));
+    writefile("fates-esp.json", Encoded);
+end
