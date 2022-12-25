@@ -654,25 +654,25 @@ function Load()
 	end
 end
 
-Options('Enabled', 'ESP Enabled', true);
-Options('ShowTeam', 'Show Team', true);
-Options('ShowTeamColor', 'Show Team Color', false);
-Options('ShowName', 'Show Names', true);
-Options('ShowDistance', 'Show Distance', true);
-Options('ShowHealth', 'Show Health', true);
-Options('ShowBoxes', 'Show Boxes', true);
-Options('ShowTracers', 'Show Tracers', true);
-Options('ShowDot', 'Show Head Dot', false);
-Options('VisCheck', 'Visibility Check', false);
-Options('Crosshair', 'Crosshair', false);
-Options('TextOutline', 'Text Outline', true);
--- Options('Rainbow', 'Rainbow Mode', false);
-Options('TextSize', 'Text Size', syn and 18 or 14, 10, 24); -- cuz synapse fonts look weird???
-Options('MaxDistance', 'Max Distance', 2500, 100, 50000);
-Options('RefreshRate', 'Refresh Rate (ms)', 5, 1, 200);
-Options('YOffset', 'Y Offset', 0, -200, 200);
-Options('MenuKey', 'Menu Key', Enum.KeyCode.F4, 1);
-Options('ToggleKey', 'Toggle Key', Enum.KeyCode.F3, 1);
+Options('Enabled', true);
+Options('ShowTeam', true);
+Options('ShowTeamColor', true);
+Options('ShowName', true);
+Options('ShowDistance', true);
+Options('ShowHealth', true);
+Options('ShowBoxes', true);
+Options('ShowTracers', true);
+Options('ShowDot', false);
+Options('VisCheck', false);
+Options('Crosshair', true);
+Options('TextOutline', false);
+-- Options('Rainbow', false);
+Options('TextSize', 'Text Size', syn and 0 or 0, 0, 0); -- cuz synapse fonts look weird???
+Options('MaxDistance', 2500, 100, 50000);
+Options('RefreshRate', 5, 1, 200);
+Options('YOffset', 0, -200, 200);
+Options('MenuKey', Enum.KeyCode.F4, 1);
+Options('ToggleKey', Enum.KeyCode.F3, 1);
 Options('ChangeColors', SENTINEL_LOADED and 'Sentinel Unsupported' or 'Change Colors', function()
 	if SENTINEL_LOADED then return end
 
@@ -1496,14 +1496,14 @@ function CreateMenu(NewPosition) -- Create Menu
 		Visible		= true;
 	});
 	Menu:AddMenuInstance('TopBarText', 'Text', {
-		Size 		= 25;
+		Size 		= 0;
 		Position	= shared.MenuDrawingData.Instances.TopBarTwo.Position + V2New(25, 10);
-		Text		= 'Unnamed ESP';
-		Color		= Colors.Secondary.Light;
+		Text		= '';
+		Color		= Colors.Secondary.Dark;
 		Visible		= true;
-		Transparency= 1; -- proto outline fix
+		Transparency= 0; -- proto outline fix
 		Outline 	= true;
-		OutlineOpacity = 0.5;
+		OutlineOpacity = 0;
 	});
 	Menu:AddMenuInstance('TopBarTextBR', 'Text', {
 		Size 		= 18;
