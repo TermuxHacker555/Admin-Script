@@ -111,9 +111,9 @@ local _aimsp_settings; _aimsp_settings = {
     esp_toggle_key = Enum.KeyCode.L,
     esp_thickness = 2, -- thickness in pixels
     rainbow_speed = 5,
-    use_rainbow = false, -- rgb mode
+    use_rainbow = true, -- rgb mode
     crosshair = {
-        use = false,
+        use = true,
 
         distance = 4,
         thickness = 1,
@@ -124,7 +124,6 @@ local _aimsp_settings; _aimsp_settings = {
     looking_at_tracers = {
         use = true,
 
-        --https://www.google.com/search?q=color+picker
         color = color3_new(200, 0, 255), -- color in rgb
         thickness = 2,
         length = 5; -- how far the tracer will go
@@ -430,7 +429,7 @@ objects.crosshair.top = utility.new_drawing("Line"){
     Thickness = aimsp_settings.crosshair.thickness,
     Transparency = 1,
     Color = white,
-    From = vector2_new(center_screen.X, center_screen.Y - aimsp_settings.crosshair.length - aimsp_settings.crosshair.distance),
+    From = vector2_new(center_screen.X, center_screen.X - aimsp_settings.crosshair.length - aimsp_settings.crosshair.distance),
     To = vector2_new(center_screen.X, center_screen.Y - aimsp_settings.crosshair.distance);
 }
 
