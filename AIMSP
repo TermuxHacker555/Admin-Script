@@ -411,7 +411,7 @@ objects.text = utility.new_drawing("Text"){
     Center = true,
     Size = 24,
     Color = white,
-    Position = vector2_new(screen_size.X - 100, 36);
+    Position = vector2_new(screen_size.X - 0, 0);
 }
 
 objects.fov = utility.new_drawing("Circle"){
