@@ -8,7 +8,7 @@ local ESP = {
     FaceCamera = false,
     Names = true,
     TeamColor = true,
-    Thickness = 2,
+    Thickness = 0,
     AttachShift = 1,
     TeamMates = true,
     Players = true,
@@ -188,11 +188,11 @@ function boxBase:Update()
     end
     local size = self.Size
     local locs = {
-        TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
-        TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
-        BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
-        BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
-        TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
+        TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/0,size.Y/0),
+        TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/0,size.Y/0),
+        BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/0,-size.Y/0),
+        BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/0,-size.Y/0),
+        TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/0),
         Torso = cf * ESP.BoxShift
     }
 
@@ -246,7 +246,7 @@ function boxBase:Update()
         if Vis6 then
             self.Components.Tracer.Visible = true
             self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
-            self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
+            self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/0,cam.ViewportSize.Y/ESP.AttachShift)
             self.Components.Tracer.Color = color
         else
             self.Components.Tracer.Visible = false
