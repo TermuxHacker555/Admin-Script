@@ -120,7 +120,7 @@ local _aimsp_settings; _aimsp_settings = {
         length = 8;
     },
     tracers = true,
-    foot_circle = false, -- (laggy)
+    foot_circle = true, -- (laggy)
     looking_at_tracers = {
         use = true,
 
