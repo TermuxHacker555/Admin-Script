@@ -1,0 +1,2200 @@
+local Config = {
+    WindowName = "V.G Hub",
+	Color = Color3.fromRGB(255,128,64),
+	Keybind = Enum.KeyCode.RightControl
+}
+
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Player = Players.LocalPlayer
+local wait = task.wait 
+local spawn = task.spawn 
+
+local Name = "Arsenal.txt"
+
+Des = {}
+if makefolder then
+    makefolder("V.G Hub")
+end
+
+local Settings
+
+if
+    not pcall(
+        function()
+            readfile("V.G Hub//" .. Name)
+        end
+    )
+ then
+    writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
+end
+
+Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
+
+local function Save()
+    writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
+end
+
+function getUserRole(i, v)
+    return i:GetRoleInGroup(v)
+end
+Players.PlayerAdded:Connect(
+    function(v)
+        if
+            getUserRole(v, 2613928) == "Game Moderators" or getUserRole(v, 2613928) == "Interns" or
+                getUserRole(v, 2613928) == "Contractors" or
+                getUserRole(v, 2613928) == "Contributors" or
+                getUserRole(v, 2613928) == "Beloved" or
+                getUserRole(v, 2613928) == "Main Developers" or
+                getUserRole(v, 2613928) == "Founder/Main Developer"
+         then
+            local PlaceID = game.PlaceId
+            local AllIDs = {}
+            local foundAnything = ""
+            local actualHour = os.date("!*t").hour
+            local Deleted = false
+            function TPReturner()
+                local Site
+                if foundAnything == "" then
+                    Site =
+                        game.HttpService:JSONDecode(
+                        game:HttpGet(
+                            "https://games.roblox.com/v1/games/" .. PlaceID .. "/servers/Public?sortOrder=Asc&limit=100"
+                        )
+                    )
+                else
+                    Site =
+                        game.HttpService:JSONDecode(
+                        game:HttpGet(
+                            "https://games.roblox.com/v1/games/" ..
+                                PlaceID .. "/servers/Public?sortOrder=Asc&limit=100&cursor=" .. foundAnything
+                        )
+                    )
+                end
+                local ID = ""
+                if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+                    foundAnything = Site.nextPageCursor
+                end
+                local num = 0
+                for i, v in pairs(Site.data) do
+                    local Possible = true
+                    ID = tostring(v.id)
+                    if tonumber(v.maxPlayers) > tonumber(v.playing) then
+                        for _, Existing in pairs(AllIDs) do
+                            if num ~= 0 then
+                                if ID == tostring(Existing) then
+                                    Possible = false
+                                end
+                            else
+                                if tonumber(actualHour) ~= tonumber(Existing) then
+                                    local delFile =
+                                        pcall(
+                                        function()
+                                            delfile("NotSameServers.json")
+                                            AllIDs = {}
+                                            table.insert(AllIDs, actualHour)
+                                        end
+                                    )
+                                end
+                            end
+                            num = num + 1
+                        end
+                        if Possible == true then
+                            table.insert(AllIDs, ID)
+                            wait()
+                            pcall(
+                                function()
+                                    writefile("NotSameServers.json", HttpService:JSONEncode(AllIDs))
+                                    wait()
+                                    game:GetService("TeleportService"):TeleportToPlaceInstance(
+                                        PlaceID,
+                                        ID,
+                                        Player
+                                    )
+                                end
+                            )
+                            wait(4)
+                        end
+                    end
+                end
+            end
+
+            function Teleport()
+                while wait() do
+                    pcall(
+                        function()
+                            TPReturner()
+                            if foundAnything ~= "" then
+                                TPReturner()
+                            end
+                        end
+                    )
+                end
+            end
+
+            -- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
+            Teleport() --CharWars
+        end
+    end
+)
+local test = getsenv(game.Players.LocalPlayer.PlayerGui.GUI.Client
+)
+local Join = test.JoinTeam 
+
+local function Nope()
+    Player.PlayerGui.Menew.Enabled = false
+    Player.PlayerGui.GUI.Enabled = true
+    Player.PlayerGui.GUI.TeamSelection.Visible = false
+    Player.PlayerGui.GUI.BottomFrame.Visible = false
+    Player.PlayerGui.GUI.Interface.Visible = true
+end
+local Teams = {"TBC","TBC","TRC","TYC","Random"}
+local function Spawn()
+    repeat
+        wait()
+    until not ReplicatedStorage.wkspc.Status.RoundOver.Value == true
+    wait(1)
+    for i,v in pairs(Teams) do wait(1)
+    if game.Players.LocalPlayer.Status.Team.Value == "Spectator" then
+    Join(v)
+    ReplicatedStorage.Events.LoadCharacter:FireServer()
+    Nope()
+    end 
+    end 
+end
+
+
+getgenv().Circle = Drawing.new("Circle")
+Circle.Color = Color3.fromRGB(22, 13, 56)
+Circle.Thickness = 1
+Circle.Radius = 250
+Circle.Visible = false 
+Circle.NumSides = 1000
+Circle.Filled = false
+Circle.Transparency = 1
+
+RunService.RenderStepped:Connect(
+    function()
+        local Mouse = UserInputService:GetMouseLocation()
+        Circle.Position = Vector2.new(Mouse.X, Mouse.Y)
+    end
+)
+
+Settings.Aimbot = {
+    FreeForAll = false,
+    WallCheck = false,
+    Enabled = false,
+    FOV = 250
+}
+local Shoot = false
+
+function FreeForAll(v)
+    if Settings.Aimbot.FreeForAll == false or Settings.T.FreeForAll == false then
+        if Player.Team == v.Team then
+            return false
+        else
+            return true
+        end
+    else
+        return true
+    end
+end
+
+function NotObstructing(i, v)
+    if Settings.Aimbot.WallCheck then
+        c = Workspace.CurrentCamera.CFrame.p
+        a = Ray.new(c, i - c)
+        f = Workspace:FindPartOnRayWithIgnoreList(a, v)
+        return f == nil
+    else
+        return true
+    end
+end
+UserInputService.InputBegan:Connect(
+    function(v)
+        if v.UserInputType == Enum.UserInputType.MouseButton2 then
+            Shoot = true
+        end
+    end
+)
+
+UserInputService.InputEnded:Connect(
+    function(v)
+        if v.UserInputType == Enum.UserInputType.MouseButton2 then
+            Shoot = false
+        end
+    end
+)
+
+function GetClosestToCuror()
+    Closest = math.huge
+    Target = nil
+    for _, v in pairs(Players:GetPlayers()) do
+        if FreeForAll(v) then
+            if
+                v ~= Player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and
+                    v.Character:FindFirstChild("Humanoid") and
+                    v.Character.Humanoid.Health ~= 0
+             then
+                Point, OnScreen = Workspace.CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
+                if
+                    OnScreen and
+                        NotObstructing(
+                            v.Character.HumanoidRootPart.Position,
+                            {Player.Character, v.Character}
+                        )
+                 then
+                    Distance =
+                        (Vector2.new(Point.X, Point.Y) -
+                        Vector2.new(Player:GetMouse().X, Player:GetMouse().Y)).magnitude
+                    if Distance <= Settings.Aimbot.FOV then
+                        Closest = Distance
+                        Target = v
+                    end
+                end
+            end
+        end
+    end
+    return Target
+end
+
+RunService.Stepped:connect(
+    function()
+        pcall(
+            function()
+                if Settings.Aimbot.Enabled == false or Shoot == false then
+                    return
+                end
+                ClosestPlayer = GetClosestToCuror()
+                if ClosestPlayer then
+                    Workspace.CurrentCamera.CFrame =
+                        CFrame.new(Workspace.CurrentCamera.CFrame.p, ClosestPlayer.Character[Settings.AimPart].CFrame.p)
+                end
+            end
+        )
+    end
+)
+Settings.T = {
+    TeamCheck = false,
+    Delay = 0.01,
+    Enabled = false
+}
+
+local Aim = false
+UserInputService.InputBegan:connect(
+    function(v)
+        if v.UserInputType == Enum.UserInputType.MouseButton2 and Settings.T.Enabled then
+            Aim = true
+            while Aim do
+                wait()
+                if
+                    Player:GetMouse().Target and
+                        Players:FindFirstChild(
+                            Player:GetMouse().Target.Parent.Name
+                        )
+                 then
+                    local Person =
+                        Players:FindFirstChild(
+                        Player:GetMouse().Target.Parent.Name
+                    )
+                    if Person.Team ~= Player.Team or not Settings.T.TeamCheck then
+                        if Settings.T.Delay > 0 then
+                            wait(0.01)
+                        end
+                        mouse1press()
+                        wait()
+                        mouse1release()
+                    end
+                end
+                if not Settings.T.Enabled then
+                    break
+                end
+            end
+        end
+    end
+)
+
+UserInputService.InputEnded:connect(
+    function(v)
+        if v.KeyCode == Enum.UserInputType.MouseButton2 and Settings.T.Enabled then
+            Aim = false
+        end
+    end
+)
+
+
+
+
+local Library = {Toggle = true,FirstTab = nil,TabCount = 0,ColorTable = {}}
+
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local function MakeDraggable(ClickObject, Object)
+	local Dragging = nil
+	local DragInput = nil
+	local DragStart = nil
+	local StartPosition = nil
+	
+	ClickObject.InputBegan:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+			Dragging = true
+			DragStart = Input.Position
+			StartPosition = Object.Position
+			
+			Input.Changed:Connect(function()
+				if Input.UserInputState == Enum.UserInputState.End then
+					Dragging = false
+				end
+			end)
+		end
+	end)
+	
+	ClickObject.InputChanged:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
+			DragInput = Input
+		end
+	end)
+	
+	UserInputService.InputChanged:Connect(function(Input)
+		if Input == DragInput and Dragging then
+			local Delta = Input.Position - DragStart
+			Object.Position = UDim2.new(StartPosition.X.Scale, StartPosition.X.Offset + Delta.X, StartPosition.Y.Scale, StartPosition.Y.Offset + Delta.Y)
+		end
+	end)
+end
+
+function Library:CreateWindow(Config, Parent)
+	local WindowInit = {}
+	local Folder = game:GetObjects("rbxassetid://7141683860")[1]
+	local Screen = Folder.Bracket:Clone()
+    if syn and syn.protect_gui then
+    syn.protect_gui(Screen)
+    Screen.Parent = CoreGui
+    elseif gethui then
+    Screen.Parent = gethui()
+    else
+    Screen.Parent = CoreGui
+    end
+	local Main = Screen.Main
+	local Holder = Main.Holder
+	local Topbar = Main.Topbar
+	local TContainer = Holder.TContainer
+	local TBContainer = Holder.TBContainer.Holder
+	--[[
+	-- idk probably fix for exploits that dont have this function
+	if syn and syn.protect_gui then
+		syn.protect_gui(Screen)
+	end
+	]]
+	
+	Screen.Name =  "VGHUB"
+	Screen.Parent = Parent
+	Topbar.WindowName.Text = Config.WindowName
+
+	MakeDraggable(Topbar,Main)
+	local function CloseAll()
+		for _,Tab in pairs(TContainer:GetChildren()) do
+			if Tab:IsA("ScrollingFrame") then
+				Tab.Visible = false
+			end
+		end
+	end
+	local function ResetAll()
+		for _,TabButton in pairs(TBContainer:GetChildren()) do
+			if TabButton:IsA("TextButton") then
+				TabButton.BackgroundTransparency = 1
+			end
+		end
+		for _,TabButton in pairs(TBContainer:GetChildren()) do
+			if TabButton:IsA("TextButton") then
+				TabButton.Size = UDim2.new(0,480 / Library.TabCount,1,0)
+			end
+		end
+		for _,Pallete in pairs(Screen:GetChildren()) do
+			if Pallete:IsA("Frame") and Pallete.Name ~= "Main" then
+				Pallete.Visible = false
+			end
+		end
+	end
+	local function KeepFirst()
+		for _,Tab in pairs(TContainer:GetChildren()) do
+			if Tab:IsA("ScrollingFrame") then
+				if Tab.Name == Library.FirstTab .. " T" then
+					Tab.Visible = true
+				else
+					Tab.Visible = false
+				end
+			end
+		end
+		for _,TabButton in pairs(TBContainer:GetChildren()) do
+			if TabButton:IsA("TextButton") then
+				if TabButton.Name == Library.FirstTab .. " TB" then
+					TabButton.BackgroundTransparency = 0
+				else
+					TabButton.BackgroundTransparency = 1
+				end
+			end
+		end
+	end
+	local function Toggle(State)
+		if State then
+			Main.Visible = true
+		elseif not State then
+			for _,Pallete in pairs(Screen:GetChildren()) do
+				if Pallete:IsA("Frame") and Pallete.Name ~= "Main" then
+					Pallete.Visible = false
+				end
+			end
+			Screen.ToolTip.Visible = false
+			Main.Visible = false
+		end
+		Library.Toggle = State
+	end
+	local function ChangeColor(Color)
+		Config.Color = Color
+		for i, v in pairs(Library.ColorTable) do
+			if v.BackgroundColor3 ~= Color3.fromRGB(50, 50, 50) then
+				v.BackgroundColor3 = Color
+			end
+		end
+	end
+
+	function WindowInit:Toggle(State)
+		Toggle(State)
+	end
+
+	function WindowInit:ChangeColor(Color)
+		ChangeColor(Color)
+	end
+
+	function WindowInit:SetBackground(ImageId)
+		Holder.Image = "rbxassetid://" .. ImageId
+	end
+
+	function WindowInit:SetBackgroundColor(Color)
+		Holder.ImageColor3 = Color
+	end
+	function WindowInit:SetBackgroundTransparency(Transparency)
+		Holder.ImageTransparency = Transparency
+	end
+
+	function WindowInit:SetTileOffset(Offset)
+		Holder.TileSize = UDim2.new(0,Offset,0,Offset)
+	end
+	function WindowInit:SetTileScale(Scale)
+		Holder.TileSize = UDim2.new(Scale,0,Scale,0)
+	end
+
+	RunService.RenderStepped:Connect(function()
+		if Library.Toggle then
+			Screen.ToolTip.Position = UDim2.new(0,UserInputService:GetMouseLocation().X + 10,0,UserInputService:GetMouseLocation().Y - 5)
+		end
+	end)
+
+	function WindowInit:CreateTab(Name)
+		local TabInit = {}
+		local Tab = Folder.Tab:Clone()
+		local TabButton = Folder.TabButton:Clone()
+
+		Tab.Name = Name .. " T"
+		Tab.Parent = TContainer
+
+		TabButton.Name = Name .. " TB"
+		TabButton.Parent = TBContainer
+		TabButton.Title.Text = Name
+		TabButton.BackgroundColor3 = Config.Color
+
+		table.insert(Library.ColorTable, TabButton)
+		Library.TabCount = Library.TabCount + 1
+		if Library.TabCount == 1 then
+			Library.FirstTab = Name
+		end
+
+		CloseAll()
+		ResetAll()
+		KeepFirst()
+
+		local function GetSide(Longest)
+			if Longest then
+				if Tab.LeftSide.ListLayout.AbsoluteContentSize.Y > Tab.RightSide.ListLayout.AbsoluteContentSize.Y then
+					return Tab.LeftSide
+				else
+					return Tab.RightSide
+				end
+			else
+				if Tab.LeftSide.ListLayout.AbsoluteContentSize.Y > Tab.RightSide.ListLayout.AbsoluteContentSize.Y then
+					return Tab.RightSide
+				else
+					return Tab.LeftSide
+				end
+			end
+		end
+
+		TabButton.MouseButton1Click:Connect(function()
+			CloseAll()
+			ResetAll()
+			Tab.Visible = true
+			TabButton.BackgroundTransparency = 0
+		end)
+
+		Tab.LeftSide.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+			if GetSide(true).Name == Tab.LeftSide.Name then
+				Tab.CanvasSize = UDim2.new(0,0,0,Tab.LeftSide.ListLayout.AbsoluteContentSize.Y + 15)
+			else
+				Tab.CanvasSize = UDim2.new(0,0,0,Tab.RightSide.ListLayout.AbsoluteContentSize.Y + 15)
+			end
+		end)
+		Tab.RightSide.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+			if GetSide(true).Name == Tab.LeftSide.Name then
+				Tab.CanvasSize = UDim2.new(0,0,0,Tab.LeftSide.ListLayout.AbsoluteContentSize.Y + 15)
+			else
+				Tab.CanvasSize = UDim2.new(0,0,0,Tab.RightSide.ListLayout.AbsoluteContentSize.Y + 15)
+			end
+		end)
+
+		function TabInit:CreateSection(Name)
+			local SectionInit = {}
+			local Section = Folder.Section:Clone()
+			Section.Name = Name .. " S"
+			Section.Parent = GetSide(false)
+
+			Section.Title.Text = Name
+			Section.Title.Size = UDim2.new(0,Section.Title.TextBounds.X + 10,0,2)
+
+			Section.Container.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+				Section.Size = UDim2.new(1,0,0,Section.Container.ListLayout.AbsoluteContentSize.Y + 15)
+			end)
+			
+			function SectionInit:CreateLabel(Name)
+				local LabelInit = {}
+				local Label = Folder.Label:Clone()
+				Label.Name = Name .. " L"
+				Label.Parent = Section.Container
+				Label.Text = Name
+				Label.Size = UDim2.new(1,-10,0,Label.TextBounds.Y)
+				function LabelInit:UpdateText(Text)
+					Label.Text = Text
+					Label.Size = UDim2.new(1,-10,0,Label.TextBounds.Y)
+				end
+				return LabelInit
+			end
+			function SectionInit:CreateButton(Name, Callback)
+				local ButtonInit = {}
+				local Button = Folder.Button:Clone()
+				Button.Name = Name .. " B"
+				Button.Parent = Section.Container
+				Button.Title.Text = Name
+				Button.Size = UDim2.new(1,-10,0,Button.Title.TextBounds.Y + 5)
+				table.insert(Library.ColorTable, Button)
+
+				Button.MouseButton1Down:Connect(function()
+					Button.BackgroundColor3 = Config.Color
+				end)
+
+				Button.MouseButton1Up:Connect(function()
+					Button.BackgroundColor3 = Color3.fromRGB(50,50,50)
+				end)
+
+				Button.MouseLeave:Connect(function()
+					Button.BackgroundColor3 = Color3.fromRGB(50,50,50)
+				end)
+
+				Button.MouseButton1Click:Connect(function()
+					Callback()
+				end)
+
+				function ButtonInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						Button.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						Button.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+
+				return ButtonInit
+			end
+			function SectionInit:CreateTextBox(Name, PlaceHolder, NumbersOnly, Callback)
+				local TextBoxInit = {}
+				local TextBox = Folder.TextBox:Clone()
+				TextBox.Name = Name .. " T"
+				TextBox.Parent = Section.Container
+				TextBox.Title.Text = Name
+				TextBox.Background.Input.PlaceholderText = PlaceHolder
+				TextBox.Title.Size = UDim2.new(1,0,0,TextBox.Title.TextBounds.Y + 5)
+				TextBox.Size = UDim2.new(1,-10,0,TextBox.Title.TextBounds.Y + 25)
+
+				TextBox.Background.Input.FocusLost:Connect(function()
+					if NumbersOnly and not tonumber(TextBox.Background.Input.Text) then
+						Callback(tonumber(TextBox.Background.Input.Text))
+						--TextBox.Background.Input.Text = ""
+					else
+						Callback(TextBox.Background.Input.Text)
+						--TextBox.Background.Input.Text = ""
+					end
+				end)
+				function TextBoxInit:SetValue(String)
+					Callback(String)
+					TextBox.Background.Input.Text = String
+				end
+				function TextBoxInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						TextBox.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						TextBox.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+				return TextBoxInit
+			end
+			function SectionInit:CreateToggle(Name, Default, Callback)
+				local DefaultLocal = Default or false
+				local ToggleInit = {}
+				local Toggle = Folder.Toggle:Clone()
+				Toggle.Name = Name .. " T"
+				Toggle.Parent = Section.Container
+				Toggle.Title.Text = Name
+				Toggle.Size = UDim2.new(1,-10,0,Toggle.Title.TextBounds.Y + 5)
+				
+				table.insert(Library.ColorTable, Toggle.Toggle)
+				local ToggleState = false
+
+				local function SetState(State)
+					if State then
+						Toggle.Toggle.BackgroundColor3 = Config.Color
+					elseif not State then
+						Toggle.Toggle.BackgroundColor3 = Color3.fromRGB(50,50,50)
+					end
+					ToggleState = State
+					Callback(State)
+				end
+
+				Toggle.MouseButton1Click:Connect(function()
+					ToggleState = not ToggleState
+					SetState(ToggleState)
+				end)
+
+				function ToggleInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						Toggle.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						Toggle.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+
+				if Default == nil then
+					function ToggleInit:SetState(State)
+						SetState(State)
+					end
+				else
+					SetState(DefaultLocal)
+				end
+
+				function ToggleInit:GetState(State)
+					return ToggleState
+				end
+
+				function ToggleInit:CreateKeybind(Bind,Callback)
+					local KeybindInit = {}
+					Bind = Bind or "NONE"
+
+					local WaitingForBind = false
+					local Selected = Bind
+					local Blacklist = {"W","A","S","D","Slash","Tab","Backspace","Escape","Space","Delete","Unknown","Backquote"}
+
+					Toggle.Keybind.Visible = true
+					Toggle.Keybind.Text = "[ " .. Bind .. " ]"
+
+					Toggle.Keybind.MouseButton1Click:Connect(function()
+						Toggle.Keybind.Text = "[ ... ]"
+						WaitingForBind = true
+					end)
+
+					Toggle.Keybind:GetPropertyChangedSignal("TextBounds"):Connect(function()
+						Toggle.Keybind.Size = UDim2.new(0,Toggle.Keybind.TextBounds.X,1,0)
+						Toggle.Title.Size = UDim2.new(1,-Toggle.Keybind.Size.X.Offset - 15,1,0)
+					end)
+
+					UserInputService.InputBegan:Connect(function(Input)
+						if WaitingForBind and Input.UserInputType == Enum.UserInputType.Keyboard then
+							local Key = tostring(Input.KeyCode):gsub("Enum.KeyCode.", "")
+							if not table.find(Blacklist, Key) then
+								Toggle.Keybind.Text = "[ " .. Key .. " ]"
+								Selected = Key
+							else
+								Toggle.Keybind.Text = "[ NONE ]"
+								Selected = "NONE"
+							end
+							WaitingForBind = false
+						elseif Input.UserInputType == Enum.UserInputType.Keyboard then
+							local Key = tostring(Input.KeyCode):gsub("Enum.KeyCode.", "")
+							if Key == Selected then
+								ToggleState = not ToggleState
+								SetState(ToggleState)
+								if Callback then
+									Callback(Key)
+								end
+							end
+						end
+					end)
+
+					function KeybindInit:SetBind(Key)
+						Toggle.Keybind.Text = "[ " .. Key .. " ]"
+						Selected = Key
+					end
+
+					function KeybindInit:GetBind()
+						return Selected
+					end
+
+					return KeybindInit
+				end
+				return ToggleInit
+			end
+			function SectionInit:CreateSlider(Name, Min, Max, Default, Precise, Callback)
+				local DefaultLocal = Default or 50
+				local SliderInit = {}
+				local Slider = Folder.Slider:Clone()
+				Slider.Name = Name .. " S"
+				Slider.Parent = Section.Container
+				
+				Slider.Title.Text = Name
+				Slider.Slider.Bar.Size = UDim2.new(Min / Max,0,1,0)
+				Slider.Slider.Bar.BackgroundColor3 = Config.Color
+				Slider.Value.PlaceholderText = tostring(Min / Max)
+				Slider.Title.Size = UDim2.new(1,0,0,Slider.Title.TextBounds.Y + 5)
+				Slider.Size = UDim2.new(1,-10,0,Slider.Title.TextBounds.Y + 15)
+				table.insert(Library.ColorTable, Slider.Slider.Bar)
+
+				local GlobalSliderValue = 0
+				local Dragging = false
+				local function Sliding(Input)
+                    local Position = UDim2.new(math.clamp((Input.Position.X - Slider.Slider.AbsolutePosition.X) / Slider.Slider.AbsoluteSize.X,0,1),0,1,0)
+                    Slider.Slider.Bar.Size = Position
+					local SliderPrecise = ((Position.X.Scale * Max) / Max) * (Max - Min) + Min
+					local SliderNonPrecise = math.floor(((Position.X.Scale * Max) / Max) * (Max - Min) + Min)
+                    local SliderValue = Precise and SliderNonPrecise or SliderPrecise
+					SliderValue = tonumber(string.format("%.2f", SliderValue))
+					GlobalSliderValue = SliderValue
+                    Slider.Value.PlaceholderText = tostring(SliderValue)
+                    Callback(GlobalSliderValue)
+                end
+				local function SetValue(Value)
+					GlobalSliderValue = Value
+					Slider.Slider.Bar.Size = UDim2.new(Value / Max,0,1,0)
+					Slider.Value.PlaceholderText = Value
+					Callback(Value)
+				end
+				Slider.Value.FocusLost:Connect(function()
+					if not tonumber(Slider.Value.Text) then
+						Slider.Value.Text = GlobalSliderValue
+					elseif Slider.Value.Text == "" or tonumber(Slider.Value.Text) <= Min then
+						Slider.Value.Text = Min
+					elseif Slider.Value.Text == "" or tonumber(Slider.Value.Text) >= Max then
+						Slider.Value.Text = Max
+					end
+		
+					GlobalSliderValue = Slider.Value.Text
+					Slider.Slider.Bar.Size = UDim2.new(Slider.Value.Text / Max,0,1,0)
+					Slider.Value.PlaceholderText = Slider.Value.Text
+					Callback(tonumber(Slider.Value.Text))
+					Slider.Value.Text = ""
+				end)
+
+				Slider.InputBegan:Connect(function(Input)
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        Sliding(Input)
+						Dragging = true
+                    end
+                end)
+
+				Slider.InputEnded:Connect(function(Input)
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+						Dragging = false
+                    end
+                end)
+
+				UserInputService.InputBegan:Connect(function(Input)
+					if Input.KeyCode == Enum.KeyCode.LeftControl then
+						Slider.Value.ZIndex = 4
+					end
+				end)
+
+				UserInputService.InputEnded:Connect(function(Input)
+					if Input.KeyCode == Enum.KeyCode.LeftControl then
+						Slider.Value.ZIndex = 3
+					end
+				end)
+
+				UserInputService.InputChanged:Connect(function(Input)
+					if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then
+						Sliding(Input)
+					end
+				end)
+
+				function SliderInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						Slider.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						Slider.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+
+				if Default == nil then
+					function SliderInit:SetValue(Value)
+						GlobalSliderValue = Value
+						Slider.Slider.Bar.Size = UDim2.new(Value / Max,0,1,0)
+						Slider.Value.PlaceholderText = Value
+						Callback(Value)
+					end
+				else
+					SetValue(DefaultLocal)
+				end
+
+				function SliderInit:GetValue(Value)
+					return GlobalSliderValue
+				end
+
+				return SliderInit
+			end
+			function SectionInit:CreateDropdown(Name, OptionTable, Callback, InitialValue)
+				local DropdownInit = {}
+				local Dropdown = Folder.Dropdown:Clone()
+				Dropdown.Name = Name .. " D"
+				Dropdown.Parent = Section.Container
+
+				Dropdown.Title.Text = Name
+				Dropdown.Title.Size = UDim2.new(1,0,0,Dropdown.Title.TextBounds.Y + 5)
+				Dropdown.Container.Position = UDim2.new(0,0,0,Dropdown.Title.TextBounds.Y + 5)
+				Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Title.TextBounds.Y + 25)
+
+				local DropdownToggle = false
+
+				Dropdown.MouseButton1Click:Connect(function()
+					DropdownToggle = not DropdownToggle
+					if DropdownToggle then
+						Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
+						Dropdown.Container.Holder.Visible = true
+					else
+						Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Title.TextBounds.Y + 25)
+						Dropdown.Container.Holder.Visible = false
+					end
+				end)
+
+				for _,OptionName in pairs(OptionTable) do
+					local Option = Folder.Option:Clone()
+					Option.Name = OptionName
+					Option.Parent = Dropdown.Container.Holder.Container
+
+					Option.Title.Text = OptionName
+					Option.BackgroundColor3 = Config.Color
+					Option.Size = UDim2.new(1,0,0,Option.Title.TextBounds.Y + 5)
+					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
+					table.insert(Library.ColorTable, Option)
+
+					Option.MouseButton1Down:Connect(function()
+						Option.BackgroundTransparency = 0
+					end)
+
+					Option.MouseButton1Up:Connect(function()
+						Option.BackgroundTransparency = 1
+					end)
+
+					Option.MouseLeave:Connect(function()
+						Option.BackgroundTransparency = 1
+					end)
+
+					Option.MouseButton1Click:Connect(function()
+						Dropdown.Container.Value.Text = OptionName
+						Callback(OptionName)
+					end)
+				end
+				function DropdownInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						Dropdown.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						Dropdown.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+
+				function DropdownInit:GetOption()
+					return Dropdown.Container.Value.Text
+				end
+				function DropdownInit:SetOption(Name)
+					for _,Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
+						if Option:IsA("TextButton") and string.find(Option.Name, Name) then
+							Dropdown.Container.Value.Text = Option.Name
+							Callback(Name)
+						end
+					end
+				end
+				function DropdownInit:RemoveOption(Name)
+					for _,Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
+						if Option:IsA("TextButton") and string.find(Option.Name, Name) then
+							Option:Destroy()
+						end
+					end
+					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
+							Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
+				end
+				function DropdownInit:ClearOptions()
+					for _, Option in pairs(Dropdown.Container.Holder.Container:GetChildren()) do
+						if Option:IsA("TextButton") then
+							Option:Destroy()
+						end
+					end
+					Dropdown.Container.Holder.Size = UDim2.new(1,-5,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y)
+					Dropdown.Size = UDim2.new(1,-10,0,Dropdown.Container.Holder.Container.ListLayout.AbsoluteContentSize.Y + Dropdown.Title.TextBounds.Y + 30)
+				end
+				if InitialValue then
+					DropdownInit:SetOption(InitialValue)
+				end
+				return DropdownInit
+			end
+			function SectionInit:CreateColorpicker(Name,Callback)
+				local ColorpickerInit = {}
+				local Colorpicker = Folder.Colorpicker:Clone()
+				local Pallete = Folder.Pallete:Clone()
+
+				Colorpicker.Name = Name .. " CP"
+				Colorpicker.Parent = Section.Container
+				Colorpicker.Title.Text = Name
+				Colorpicker.Size = UDim2.new(1,-10,0,Colorpicker.Title.TextBounds.Y + 5)
+
+				Pallete.Name = Name .. " P"
+				Pallete.Parent = Screen
+
+				local ColorTable = {
+					Hue = 1,
+					Saturation = 0,
+					Value = 0
+				}
+				local ColorRender = nil
+				local HueRender = nil
+				local ColorpickerRender = nil
+				local function UpdateColor()
+					Colorpicker.Color.BackgroundColor3 = Color3.fromHSV(ColorTable.Hue,ColorTable.Saturation,ColorTable.Value)
+					Pallete.GradientPallete.BackgroundColor3 = Color3.fromHSV(ColorTable.Hue,1,1)
+					Pallete.Input.InputBox.PlaceholderText = "RGB: " .. math.round(Colorpicker.Color.BackgroundColor3.R* 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.G * 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.B * 255)
+					Callback(Colorpicker.Color.BackgroundColor3)
+				end
+
+				Colorpicker.MouseButton1Click:Connect(function()
+					if not Pallete.Visible then
+						ColorpickerRender = RunService.RenderStepped:Connect(function()
+							Pallete.Position = UDim2.new(0,Colorpicker.Color.AbsolutePosition.X - 129,0,Colorpicker.Color.AbsolutePosition.Y + 52)
+						end)
+						Pallete.Visible = true
+					else
+						Pallete.Visible = false
+						ColorpickerRender:Disconnect()
+					end
+				end)
+
+				Pallete.GradientPallete.InputBegan:Connect(function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        if ColorRender then
+                            ColorRender:Disconnect()
+                        end
+						ColorRender = RunService.RenderStepped:Connect(function()
+							local Mouse = UserInputService:GetMouseLocation()
+							local ColorX = math.clamp(Mouse.X - Pallete.GradientPallete.AbsolutePosition.X, 0, Pallete.GradientPallete.AbsoluteSize.X) / Pallete.GradientPallete.AbsoluteSize.X
+                            local ColorY = math.clamp((Mouse.Y - 37) - Pallete.GradientPallete.AbsolutePosition.Y, 0, Pallete.GradientPallete.AbsoluteSize.Y) / Pallete.GradientPallete.AbsoluteSize.Y
+							Pallete.GradientPallete.Dot.Position = UDim2.new(ColorX,0,ColorY,0)
+							ColorTable.Saturation = ColorX
+							ColorTable.Value = 1 - ColorY
+							UpdateColor()
+						end)
+					end
+				end)
+
+				Pallete.GradientPallete.InputEnded:Connect(function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        if ColorRender then
+                            ColorRender:Disconnect()
+                        end
+					end
+				end)
+
+				Pallete.ColorSlider.InputBegan:Connect(function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        if HueRender then
+                            HueRender:Disconnect()
+                        end
+						HueRender = RunService.RenderStepped:Connect(function()
+							local Mouse = UserInputService:GetMouseLocation()
+							local HueX = math.clamp(Mouse.X - Pallete.ColorSlider.AbsolutePosition.X, 0, Pallete.ColorSlider.AbsoluteSize.X) / Pallete.ColorSlider.AbsoluteSize.X
+							ColorTable.Hue = 1 - HueX
+							UpdateColor()
+						end)
+                    end
+				end)
+
+				Pallete.ColorSlider.InputEnded:Connect(function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        if HueRender then
+                            HueRender:Disconnect()
+                        end
+                    end
+				end)
+
+				function ColorpickerInit:UpdateColor(Color)
+					local Hue, Saturation, Value = Color:ToHSV()
+					Colorpicker.Color.BackgroundColor3 = Color3.fromHSV(Hue,Saturation,Value)
+					Pallete.GradientPallete.BackgroundColor3 = Color3.fromHSV(Hue,1,1)
+					Pallete.Input.InputBox.PlaceholderText = "RGB: " .. math.round(Colorpicker.Color.BackgroundColor3.R* 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.G * 255) .. "," .. math.round(Colorpicker.Color.BackgroundColor3.B * 255)
+					ColorTable = {
+						Hue = Hue,
+						Saturation = Saturation,
+						Value = Value
+					}
+					Callback(Color)
+				end
+
+				Pallete.Input.InputBox.FocusLost:Connect(function(Enter)
+					if Enter then
+						local ColorString = string.split(string.gsub(Pallete.Input.InputBox.Text," ", ""), ",")
+						ColorpickerInit:UpdateColor(Color3.fromRGB(ColorString[1],ColorString[2],ColorString[3]))
+						Pallete.Input.InputBox.Text = ""
+					end
+				end)
+
+				function ColorpickerInit:AddToolTip(Name)
+					if tostring(Name):gsub(" ", "") ~= "" then
+						Colorpicker.MouseEnter:Connect(function()
+							Screen.ToolTip.Text = Name
+							Screen.ToolTip.Size = UDim2.new(0,Screen.ToolTip.TextBounds.X + 5,0,Screen.ToolTip.TextBounds.Y + 5)
+							Screen.ToolTip.Visible = true
+						end)
+
+						Colorpicker.MouseLeave:Connect(function()
+							Screen.ToolTip.Visible = false
+						end)
+					end
+				end
+
+				return ColorpickerInit
+			end
+			return SectionInit
+		end
+		return TabInit
+	end
+	return WindowInit
+end
+
+return Library
+local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
+
+local Tab1 = Window:CreateTab("Arsenal")
+local Tab2 = Window:CreateTab("UI Settings")
+
+local Section1 = Tab1:CreateSection("")
+local Section2 = Tab1:CreateSection("")
+local Section5 = Tab1:CreateSection("")
+local Section3 = Tab2:CreateSection("Menu")
+local Section4 = Tab2:CreateSection("Background")
+
+local Toggle1 = Section1:CreateToggle("Aimbot", Settings.Aimbot.Enabled, function(State)
+    Settings.Aimbot.Enabled = State
+end)
+
+
+local Dropdown1 = Section1:CreateDropdown("HitPart", {"HumanoidRootPart","Head","UpperTorso","LowerTorso","Random"}, function(String)
+	Settings.AimPart = String
+end)
+if Settings.AimPart == nil then
+Settings.AimPart = "HumanoidRootPart"
+end 
+
+local Toggle1 = Section1:CreateToggle("FreeForAll", Settings.Aimbot.FreeForAll, function(State)
+    Settings.Aimbot.FreeForAll = State
+    Settings.T.TeamCheck = Settings.Aimbot.FreeForAll
+end)
+
+local Toggle1 = Section1:CreateToggle("TriggerBot", Settings.T.Enabled, function(State)
+    Settings.T.Enabled = State
+end)
+
+local Toggle1 = Section1:CreateToggle("WallCheck", nil, function(State)
+    Settings.Aimbot.WallCheck = State
+end)
+
+local Slider2 = Section1:CreateSlider("Aimbot Radius", 0,1000,Settings.Aimbot.FOV,false, function(Value)
+    Settings.Aimbot.FOV = Value
+    Circle.Radius = Settings.Aimbot.FOV 
+end)
+
+local Toggle1 = Section1:CreateToggle("Circle Visible", Settings.Visible, function(State)
+   Circle.Visible = State
+end)
+
+local Colorpicker3 = Section1:CreateColorpicker("Circle Color", function(Color)
+    Circle.Color = Color
+    Circle.Color = Settings.Color
+end)
+
+
+local Toggle1 = Section1:CreateToggle("SilentAim", Settings.SilentAim, function(State)
+Settings.SilentAim = State
+local Players = Players
+local LocalPlayer = Player
+local Mouse = LocalPlayer:GetMouse()
+function ClosestPlayerToCurser()
+    local MaxDistance, Closest = math.huge
+    for i,v in pairs(Players.GetPlayers(Players)) do
+        if v ~= LocalPlayer and v.Team ~= LocalPlayer.Team and v.Character then
+            local H = v.Character.FindFirstChild(v.Character, "Head")
+            if H then 
+                local Pos, Vis = Workspace.CurrentCamera.WorldToScreenPoint(Workspace.CurrentCamera, H.Position)
+                if Vis then
+                    local A1, A2 = Vector2.new(Mouse.X, Mouse.Y), Vector2.new(Pos.X, Pos.Y)
+                    local Dist = (A2 - A1).Magnitude
+                    if Dist < MaxDistance and Dist <= 2500 then
+                        MaxDistance = Dist
+                        Closest = v
+                    end
+                end
+            end
+        end
+    end
+    return Closest
+end
+local OldNameCall = nil
+OldNameCall = hookmetamethod(game, "__namecall", function(self,...)
+    local Args = {...}
+    if getnamecallmethod() == "FindPartOnRayWithIgnoreList" and not checkcaller() and Settings.SilentAim then
+        local GivemeHead = ClosestPlayerToCurser()
+        if GivemeHead and GivemeHead.Character and GivemeHead.Character.FindFirstChild(GivemeHead.Character, Settings.AimPart) then
+            Args[1] = Ray.new(Workspace.CurrentCamera.CFrame.Position, (GivemeHead.Character[Settings.AimPart].Position - Workspace.CurrentCamera.CFrame.Position).Unit * 1000)
+            return OldNameCall(self, unpack(Args))
+        end
+    end
+    return OldNameCall(self, ...)
+end)
+end)
+
+
+--Settings--
+local ESP = {
+    Enabled = false,
+    Boxes = true,
+    BoxShift = CFrame.new(0,-1.5,0),
+	BoxSize = Vector3.new(4,6,0),
+    Color = Color3.fromRGB(0, 255, 0),
+    FaceCamera = false,
+    Names = false,
+    TeamColor = true,
+    Thickness = 2,
+    AttachShift = 1,
+    TeamMates = true,
+    Players = false,
+    
+    Objects = setmetatable({}, {__mode="kv"}),
+    Overrides = {}
+}
+
+--Declarations--
+local Workspace = Get.Workspace
+local Players = Get.Players
+local Player = Players.LocalPlayer
+local cam = Workspace.CurrentCamera
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+local mouse = Player:GetMouse()
+
+local V3new = Vector3.new
+local WorldToViewportPoint = cam.WorldToViewportPoint
+
+--Functions--
+local function Draw(A, props)
+	local new = Drawing.new(A)
+	
+	props = props or {}
+	for i,v in pairs(props) do
+		new[i] = v
+	end
+	return new
+end
+
+function ESP:GetTeam(p)
+	local ov = self.Overrides.GetTeam
+	if ov then
+		return ov(p)
+	end
+	
+	return p and p.Team
+end
+
+function ESP:IsTeamMate(p)
+    local ov = self.Overrides.IsTeamMate
+	if ov then
+		return ov(p)
+    end
+    
+    return self:GetTeam(p) == self:GetTeam(Player)
+end
+
+function ESP:GetColor(A)
+	local ov = self.Overrides.GetColor
+	if ov then
+		return ov(A)
+    end
+    local p = self:GetPlayerFromChar(A)
+	return p and self.TeamColor and p.Team and p.Team.TeamColor.Color or self.Color
+end
+
+function ESP:GetPlayerFromChar(char)
+	local ov = self.Overrides.GetPlayerFromChar
+	if ov then
+		return ov(char)
+	end
+	
+	return Players:GetPlayerFromCharacter(char)
+end
+
+function ESP:Toggle(bool)
+    self.Enabled = bool
+    if not bool then
+        for i,v in pairs(self.Objects) do
+            if v.Type == "Box" then --fov circle etc
+                if v.Temporary then
+                    v:Remove()
+                else
+                    for i,v in pairs(v.Components) do
+                        v.Visible = false
+                    end
+                end
+            end
+        end
+    end
+end
+
+function ESP:GetBox(A)
+    return self.Objects[A]
+end
+
+function ESP:AddObjectListener(parent, options)
+    local function NewListener(c)
+        if type(options.Type) == "string" and c:IsA(options.Type) or options.Type == nil then
+            if type(options.Name) == "string" and c.Name == options.Name or options.Name == nil then
+                if not options.Validator or options.Validator(c) then
+                    local box = ESP:Add(c, {
+                        PrimaryPart = type(options.PrimaryPart) == "string" and c:WaitForChild(options.PrimaryPart) or type(options.PrimaryPart) == "function" and options.PrimaryPart(c),
+                        Color = type(options.Color) == "function" and options.Color(c) or options.Color,
+                        ColorDynamic = options.ColorDynamic,
+                        Name = type(options.CustomName) == "function" and options.CustomName(c) or options.CustomName,
+                        IsEnabled = options.IsEnabled,
+                        RenderInNil = options.RenderInNil
+                    })
+                    --TODO: add a better way of passing options
+                    if options.OnAdded then
+                        coroutine.wrap(options.OnAdded)(box)
+                    end
+                end
+            end
+        end
+    end
+
+    if options.Recursive then
+        parent.DescendantAdded:Connect(NewListener)
+        for i,v in pairs(parent:GetDescendants()) do
+            coroutine.wrap(NewListener)(v)
+        end
+    else
+        parent.ChildAdded:Connect(NewListener)
+        for i,v in pairs(parent:GetChildren()) do
+            coroutine.wrap(NewListener)(v)
+        end
+    end
+end
+
+local boxBase = {}
+boxBase.__index = boxBase
+
+function boxBase:Remove()
+    ESP.Objects[self.Object] = nil
+    for i,v in pairs(self.Components) do
+        v.Visible = false
+        v:Remove()
+        self.Components[i] = nil
+    end
+end
+
+function boxBase:Update()
+    if not self.PrimaryPart then
+        --warn("not supposed to print", self.Object)
+        return self:Remove()
+    end
+
+    local color
+    if ESP.Highlighted == self.Object then
+       color = ESP.HighlightColor
+    else
+        color = self.Color or self.ColorDynamic and self:ColorDynamic() or ESP:GetColor(self.Object) or ESP.Color
+    end
+
+    local allow = true
+    if ESP.Overrides.UpdateAllow and not ESP.Overrides.UpdateAllow(self) then
+        allow = false
+    end
+    if self.Player and not ESP.TeamMates and ESP:IsTeamMate(self.Player) then
+        allow = false
+    end
+    if self.Player and not ESP.Players then
+        allow = false
+    end
+    if self.IsEnabled and (type(self.IsEnabled) == "string" and not ESP[self.IsEnabled] or type(self.IsEnabled) == "function" and not self:IsEnabled()) then
+        allow = false
+    end
+    if not Workspace:IsAncestorOf(self.PrimaryPart) and not self.RenderInNil then
+        allow = false
+    end
+
+    if not allow then
+        for i,v in pairs(self.Components) do
+            v.Visible = false
+        end
+        return
+    end
+
+    if ESP.Highlighted == self.Object then
+        color = ESP.HighlightColor
+    end
+
+    --calculations--
+    local cf = self.PrimaryPart.CFrame
+    if ESP.FaceCamera then
+        cf = CFrame.new(cf.p, cam.CFrame.p)
+    end
+    local size = self.Size
+    local locs = {
+        TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
+        TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
+        BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
+        BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
+        TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
+        Torso = cf * ESP.BoxShift
+    }
+
+    if ESP.Boxes then
+        local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
+        local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
+        local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
+        local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
+
+        if self.Components.Quad then
+            if Vis1 or Vis2 or Vis3 or Vis4 then
+                self.Components.Quad.Visible = true
+                self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
+                self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
+                self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
+                self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
+                self.Components.Quad.Color = color
+            else
+                self.Components.Quad.Visible = false
+            end
+        end
+    else
+        self.Components.Quad.Visible = false
+    end
+
+    if ESP.Names then
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+        
+        if Vis5 then
+            self.Components.Name.Visible = true
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Text = self.Name
+            self.Components.Name.Color = color
+            
+            self.Components.Distance.Visible = true
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
+            self.Components.Distance.Color = color
+        else
+            self.Components.Name.Visible = false
+            self.Components.Distance.Visible = false
+        end
+    else
+        self.Components.Name.Visible = false
+        self.Components.Distance.Visible = false
+    end
+    
+    if ESP.Tracers then
+        local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
+
+        if Vis6 then
+            self.Components.Tracer.Visible = true
+            self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
+            self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
+            self.Components.Tracer.Color = color
+        else
+            self.Components.Tracer.Visible = false
+        end
+    else
+        self.Components.Tracer.Visible = false
+    end
+end
+
+function ESP:Add(obj, options)
+    if not obj.Parent and not options.RenderInNil then
+        return warn(obj, "has no parent")
+    end
+
+    local box = setmetatable({
+        Name = options.Name or obj.Name,
+        Type = "Box",
+        Color = options.Color --[[or self:GetColor(obj)]],
+        Size = options.Size or self.BoxSize,
+        Object = obj,
+        Player = options.Player or Players:GetPlayerFromCharacter(obj),
+        PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
+        Components = {},
+        IsEnabled = options.IsEnabled,
+        Temporary = options.Temporary,
+        ColorDynamic = options.ColorDynamic,
+        RenderInNil = options.RenderInNil
+    }, boxBase)
+
+    if self:GetBox(obj) then
+        self:GetBox(obj):Remove()
+    end
+
+    box.Components["Quad"] = Draw("Quad", {
+        Thickness = self.Thickness,
+        Color = color,
+        Transparency = 1,
+        Filled = false,
+        Visible = self.Enabled and self.Boxes
+    })
+    box.Components["Name"] = Draw("Text", {
+		Text = box.Name,
+		Color = box.Color,
+		Center = true,
+		Outline = true,
+        Size = 19,
+        Visible = self.Enabled and self.Names
+	})
+	box.Components["Distance"] = Draw("Text", {
+		Color = box.Color,
+		Center = true,
+		Outline = true,
+        Size = 19,
+        Visible = self.Enabled and self.Names
+	})
+	
+	box.Components["Tracer"] = Draw("Line", {
+		Thickness = ESP.Thickness,
+		Color = box.Color,
+        Transparency = 1,
+        Visible = self.Enabled and self.Tracers
+    })
+    self.Objects[obj] = box
+    
+    obj.AncestryChanged:Connect(function(_, parent)
+        if parent == nil and ESP.AutoRemove ~= false then
+            box:Remove()
+        end
+    end)
+    obj:GetPropertyChangedSignal("Parent"):Connect(function()
+        if obj.Parent == nil and ESP.AutoRemove ~= false then
+            box:Remove()
+        end
+    end)
+
+    local hum = obj:FindFirstChildOfClass("Humanoid")
+	if hum then
+        hum.Died:Connect(function()
+            if ESP.AutoRemove ~= false then
+                box:Remove()
+            end
+		end)
+    end
+
+    return box
+end
+
+local function CharAdded(char)
+    local p = Players:GetPlayerFromCharacter(char)
+    if not char:FindFirstChild("HumanoidRootPart") then
+        local ev
+        ev = char.ChildAdded:Connect(function(c)
+            if c.Name == "HumanoidRootPart" then
+                ev:Disconnect()
+                ESP:Add(char, {
+                    Name = p.Name,
+                    Player = p,
+                    PrimaryPart = c
+                })
+            end
+        end)
+    else
+        ESP:Add(char, {
+            Name = p.Name,
+            Player = p,
+            PrimaryPart = char.HumanoidRootPart
+        })
+    end
+end
+local function PlayerAdded(p)
+    p.CharacterAdded:Connect(CharAdded)
+    if p.Character then
+        coroutine.wrap(CharAdded)(p.Character)
+    end
+end
+Players.PlayerAdded:Connect(PlayerAdded)
+for i,v in pairs(Players:GetPlayers()) do
+    if v ~= Player then
+        PlayerAdded(v)
+    end
+end
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    cam = Workspace.CurrentCamera
+    for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
+        if v.Update then
+            local s,e = pcall(v.Update, v)
+            if not s then warn("[EU]", e, v.Object:GetFullName()) end
+        end
+    end
+end)
+
+return ESP
+
+local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State)
+    Settings.Esp = State
+    ESP:Toggle(Settings.Esp)
+    
+end)
+
+local Toggle1 = Section1:CreateToggle("PLayer Esp", Settings.PlayerEsp, function(State)
+    Settings.PlayerEsp = State
+    ESP.Players = Settings.PlayerEsp
+end)
+
+local Toggle1 = Section1:CreateToggle("Tracers Esp", Settings.Tracers, function(State)
+    Settings.Tracers = State
+    ESP.Tracers = Settings.Tracers
+end)
+
+local Toggle1 = Section1:CreateToggle("Name Esp", Settings.EspNames, function(State)
+    ESP.Names = Settings.EspNames
+    Settings.EspNames = State
+end)
+
+local Toggle1 = Section1:CreateToggle("Boxes Esp", Settings.Boxes, function(State)
+    Settings.Boxes = State
+    ESP.Boxes = Settings.Boxes
+end)
+
+
+local Toggle1 = Section1:CreateToggle("BHop", Settings.BHop, function(State)
+Settings.BHop = State
+spawn(function()
+while wait() and Settings.BHop do
+    Player.Character:WaitForChild("Humanoid").Jump = true
+end
+end)
+end)
+
+
+
+local Toggle1 = Section1:CreateToggle("RainBow Gun", Settings.RainBowGun, function(State)
+Settings.RainBowGun = State
+
+RunService.RenderStepped:Connect(
+    function()
+        if Settings.RainBowGun then
+            if Workspace.Camera:FindFirstChild("Arms") then
+                for i, v in pairs(Workspace.Camera.Arms:GetChildren()) do 
+                    if v.ClassName == "MeshPart" then
+                        v.Color = Color3.fromHSV(tick()%5/5,1,1) -- changes Color
+                    end
+                end
+            end
+        end
+    end
+)
+end)
+local Toggle1 = Section1:CreateToggle("Auto Heal", Settings.AutoHeal, function(State)
+Settings.AutoHeal = State
+spawn(function()
+while Settings.AutoHeal do
+    wait()
+    pcall(
+        function()
+            for i, v in pairs(Workspace.Debris:GetChildren()) do
+                if v.Name == "DeadHP" then
+                    v.CFrame = Player.Character.HumanoidRootPart.CFrame
+                end
+            end
+        end
+    )
+end
+end)
+end)
+
+local Toggle1 = Section2:CreateToggle("Infinite Ammo", Settings.Infinite, function(State)
+Settings.Infinite = State
+RunService.Stepped:connect(
+    function()
+        pcall(
+            function()
+                if Settings.Infinite then
+                    Player.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
+                    Player.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
+                end
+            end
+        )
+    end
+)
+end)
+
+local Toggle1 = Section2:CreateToggle("Always Auto", Settings.Automtatic, function(State)
+Settings.Automtatic = State
+for _, v in pairs(ReplicatedStorage.Weapons:GetDescendants()) do
+    if v.Name == "Auto" then
+        if Settings.Automtatic then
+            v.Value = true -- always auto
+        else
+            v.Value = false
+        end
+    end
+end
+end)
+
+local Toggle1 = Section2:CreateToggle("FastFire Rate", Settings.FireRate, function(State)
+Settings.FireRate = State
+for _, v in pairs(ReplicatedStorage.Weapons:GetDescendants()) do
+    if v.Name == "FireRate" then
+        if Settings.FireRate then
+            v.Value = 0.02 -- Fast Firerate
+        else
+            v.Value = 0.8
+        end
+    end
+end
+end)
+
+local Toggle1 = Section2:CreateToggle("NoRecoil/Spread", Settings.Recoil, function(State)
+Settings.Recoil = State
+for i, v in pairs(ReplicatedStorage.Weapons:GetDescendants()) do
+    if v.Name == "MaxSpread" or v.Name == "Spread" or v.Name == "RecoilControl" then
+        if Settings.Recoil then
+            v.Value = 0 -- no spread or recoil
+        else
+            v.Value = 1
+        end
+    end
+end
+end)
+
+local Toggle1 = Section1:CreateToggle("Anti Aim", nil, function(State)
+Settings.AntiAim = State
+spawn(
+    function()
+        while wait(1) and Settings.AntiAim do
+            getsenv(Player.PlayerGui.GUI.Client).lastlook = 10000
+            if Player.Character then
+                --remove legs
+                for _, v in pairs(Player.Character:GetChildren()) do
+                    if string.find(string.lower(v.Name), "foot") or string.find(string.lower(v.Name), "leg") then
+                        if v:IsA("BasePart") then
+                            v:Destroy()
+                        end
+                    end
+                end
+
+                if Player.Character:FindFirstChild("HeadHB") then
+                    Player.Character:FindFirstChild("HeadHB"):Destroy()
+                end
+                if Player.Character:FindFirstChild("FakeHead") then
+                    Player.Character:FindFirstChild("FakeHead"):Destroy()
+                end
+            end
+        end
+
+        local NewAnimation = Instance.new("Animation")
+        NewAnimation.AnimationId = "rbxassetid://0"
+
+        local OldNameCall = nil
+        OldNameCall =
+            hookmetamethod(
+            game,
+            "__namecall",
+            function(A, B, C, ...)
+                local Args = {...}
+                local Self = Args[1]
+                if getnamecallmethod() == "FireServer" and tostring(A) == "ControlTurn" then
+                    B = math.rad(math.random(-360, 360))
+                    C = Vector3.new(math.random(-10, 10), math.random(-10, 10), math.random(-10, 10))
+                    Player.Character.HumanoidRootPart.CFrame =
+                        CFrame.new(Player.Character.HumanoidRootPart.Position) *
+                        CFrame.Angles(0, math.rad(math.random(-360, 360)), 0)
+                elseif getnamecallmethod() == "LoadAnimation" and tostring(A) == "Humanoid" then
+                    B = NewAnimation
+                end
+                return OldNameCall(A, B, C, ...)
+            end
+        )
+        local OldNameCall = nil
+        OldNameCall =
+            hookmetamethod(
+            game,
+            "__namecall",
+            function(A, B, C, ...)
+                if tostring(A) == "Humanoid" and B == "AutoRotate" then
+                    return oldnewIndex(A, B, false)
+                end
+                return oldnewIndex(A, B, C, ...)
+            end
+        )
+    end
+)
+
+end)
+if Settings.WalkSpeed == nil or Settings.JumpPower == nil then
+Settings.WalkSpeed = 23 
+Settings.JumpPower = 5
+end 
+local Toggle1 = Section2:CreateToggle("Enable WalkSpeed/JumpPower", Settings.Go, function(State)
+Settings.Go = State
+RunService.Stepped:connect(
+    function()
+        if Settings.Go then
+            Player.Character:WaitForChild("Humanoid").WalkSpeed = Settings.WalkSpeed
+       	    if Player.Character:FindFirstChildOfClass('Humanoid').UseJumpPower then
+			Player.Character:WaitForChild('Humanoid').JumpPower = Settings.JumpPower
+		    else
+			Player.Character:WaitForChild('Humanoid').JumpHeight  = Settings.JumpPower
+			end 
+            if not  UserInputService.WindowFocusReleased then
+                pcall(function()
+                setfpscap(Settings.Fps)
+                end)
+            end
+        end
+    end
+)
+
+end)
+
+local TextBox1 = Section2:CreateTextBox("Fps Cap", "Only numbers", true, function(Value)
+    Settings.Fps = Value
+end)
+
+local TextBox1 = Section2:CreateTextBox("WalkSpeed", "Only numbers", true, function(Value)
+    Settings.WalkSpeed = Value
+end)
+local TextBox1 = Section2:CreateTextBox("JumpPower", "Only numbers", true, function(Value)
+    Settings.JumpPower = Value
+end)
+
+
+local Toggle1 = Section2:CreateToggle("Infinite Jump", Settings.InfiniteJump, function(State)
+Settings.InfiniteJump = State
+UserInputService.JumpRequest:connect(
+    function()
+        if Settings.InfiniteJump then
+            game:GetService "Players".LocalPlayer.Character:FindFirstChildOfClass "Humanoid":ChangeState("Jumping")
+        end
+    end
+)
+end)
+
+local Toggle1 = Section2:CreateToggle("Invisicam", Settings.Sorry, function(State)
+Settings.Sorry = State
+if Settings.Sorry then
+    Player.DevCameraOcclusionMode = "Invisicam"
+else
+    Player.DevCameraOcclusionMode = "Zoom"
+end
+end)
+
+local Toggle1 = Section2:CreateToggle("N Noclip", Settings.Sex1, function(State)
+noclips = false
+Settings.Sex1 = State
+Player:GetMouse().KeyDown:connect(
+    function(v)
+        if v == "n" then
+            if Settings.Sex1 then
+                noclips = not noclips
+                for i, v in pairs(Player.Character:GetChildren()) do
+                    if v:IsA("BasePart") then
+                        pcall(function()
+                        v.CanCollide = false
+                        end)
+                    end
+                end
+            end
+        end
+    end
+)
+RunService.Stepped:connect(
+    function()
+        if noclips then
+            for i, v in pairs(Player.Character:GetChildren()) do
+                if v:IsA("BasePart") then
+                    pcall(function()
+                    v.CanCollide = false
+                    end)
+                end
+            end
+        end
+    end
+)
+
+end)
+
+local Toggle1 = Section2:CreateToggle("G Noclip", Settings.Sex, function(State)
+Settings.Sex = State
+noclip = false
+RunService.Stepped:connect(
+    function()
+        if noclip then
+            Player.Character.Humanoid:ChangeState(11)
+        end
+    end
+)
+Player:GetMouse().KeyDown:connect(
+    function(v)
+        if v == "g" then
+            if Settings.Sex then
+                noclip = not noclip
+                Player.Character.Humanoid:ChangeState(11)
+            end
+        end
+    end
+)
+end)
+local Toggle1 = Section2:CreateToggle("H Fly", Settings.Sex2, function(State)
+Settings.Sex2 = State
+local Max = 0
+local Players = Players
+local LP = Player
+local Mouse = LP:GetMouse()
+Mouse.KeyDown:connect(
+    function(k)
+        if k:lower() == "h" then
+            Max = Max + 1
+            getgenv().Fly = false
+            if Settings.Sex2 then
+                local T = LP.Character.UpperTorso
+                local S = {
+                    F = 0,
+                    B = 0,
+                    L = 0,
+                    R = 0
+                }
+                local S2 = {
+                    F = 0,
+                    B = 0,
+                    L = 0,
+                    R = 0
+                }
+                local SPEED = 5
+                local function FLY()
+                    getgenv().Fly = true
+                    local BodyGyro = Instance.new("BodyGyro", T)
+                    local BodyVelocity = Instance.new("BodyVelocity", T)
+                    BodyGyro.P = 9e4
+                    BodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+                    BodyGyro.cframe = T.CFrame
+                    BodyVelocity.velocity = Vector3.new(0, 0.1, 0)
+                    BodyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
+                    spawn(
+                        function()
+                            repeat
+                                wait()
+                                LP.Character.Humanoid.PlatformStand = false
+                                if S.L + S.R ~= 0 or S.F + S.B ~= 0 then
+                                    SPEED = 200
+                                elseif not (S.L + S.R ~= 0 or S.F + S.B ~= 0) and SPEED ~= 0 then
+                                    SPEED = 0
+                                end
+                                if (S.L + S.R) ~= 0 or (S.F + S.B) ~= 0 then
+                                    BodyVelocity.velocity =
+                                        ((Workspace.CurrentCamera.CoordinateFrame.lookVector * (S.F + S.B)) +
+                                        ((Workspace.CurrentCamera.CoordinateFrame *
+                                            CFrame.new(S.L + S.R, (S.F + S.B) * 0.2, 0).p) -
+                                            Workspace.CurrentCamera.CoordinateFrame.p)) *
+                                        SPEED
+                                    S2 = {
+                                        F = S.F,
+                                        B = S.B,
+                                        L = S.L,
+                                        R = S.R
+                                    }
+                                elseif (S.L + S.R) == 0 and (S.F + S.B) == 0 and SPEED ~= 0 then
+                                    BodyVelocity.velocity =
+                                        ((Workspace.CurrentCamera.CoordinateFrame.lookVector * (S2.F + S2.B)) +
+                                        ((Workspace.CurrentCamera.CoordinateFrame *
+                                            CFrame.new(S2.L + S2.R, (S2.F + S2.B) * 0.2, 0).p) -
+                                            Workspace.CurrentCamera.CoordinateFrame.p)) *
+                                        SPEED
+                                else
+                                    BodyVelocity.velocity = Vector3.new(0, 0.1, 0)
+                                end
+                                BodyGyro.cframe = Workspace.CurrentCamera.CoordinateFrame
+                            until not getgenv().Fly
+                            S = {
+                                F = 0,
+                                B = 0,
+                                L = 0,
+                                R = 0
+                            }
+                            S2 = {
+                                F = 0,
+                                B = 0,
+                                L = 0,
+                                R = 0
+                            }
+                            SPEED = 0
+                            BodyGyro:destroy()
+                            BodyVelocity:destroy()
+                            LP.Character.Humanoid.PlatformStand = false
+                        end
+                    )
+                end
+                Mouse.KeyDown:connect(
+                    function(k)
+                        if k:lower() == "w" then
+                            S.F = 1
+                        elseif k:lower() == "s" then
+                            S.B = -1
+                        elseif k:lower() == "a" then
+                            S.L = -1
+                        elseif k:lower() == "d" then
+                            S.R = 1
+                        end
+                    end
+                )
+                Mouse.KeyUp:connect(
+                    function(k)
+                        if k:lower() == "w" then
+                            S.F = 0
+                        elseif k:lower() == "s" then
+                            S.B = 0
+                        elseif k:lower() == "a" then
+                            S.L = 0
+                        elseif k:lower() == "d" then
+                            S.R = 0
+                        end
+                    end
+                )
+                FLY()
+                if Max == 2 then
+                    getgenv().Fly = false
+                    Max = 0
+                end
+            end
+        end
+    end
+)
+end)
+local Button1 = Section2:CreateButton("Anti Lag", function()
+for _, v in pairs(Workspace:GetDescendants()) do
+    if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
+        v.Material = Enum.Material.SmoothPlastic
+        if v:IsA("Texture") then
+            v:Destroy()
+        end
+    end
+end
+end)
+
+local Button1 = Section2:CreateButton("Teleport to RandomPlayer", function()
+local randomPlayer = Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
+
+Player.Character.HumanoidRootPart.CFrame =
+    CFrame.new(
+    Vector3.new(
+        randomPlayer.Character.Head.Position.X,
+        randomPlayer.Character.Head.Position.Y,
+        randomPlayer.Character.Head.Position.Z
+    )
+)
+end)
+local Button1 = Section2:CreateButton("Lag Switch F3", function()
+local ass = false
+local bitch = settings()
+
+game:service "UserInputService".InputEnded:connect(
+    function(i)
+        if i.KeyCode == Enum.KeyCode.F3 then
+            ass = not ass
+            bitch.Network.IncomingReplicationLag = ass and 10 or 0
+        end
+    end
+)
+ end) 
+local Button1 = Section2:CreateButton("ServerHop", function()
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+local File = pcall(function()
+    AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+end)
+if not File then
+    table.insert(AllIDs, actualHour)
+    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+end
+function TPReturner()
+    local Site;
+    if foundAnything == "" then
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+    else
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+    end
+    local ID = ""
+    if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+        foundAnything = Site.nextPageCursor
+    end
+    local num = 0;
+    for i,v in pairs(Site.data) do
+        local Possible = true
+        ID = tostring(v.id)
+        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+            for _,Existing in pairs(AllIDs) do
+                if num ~= 0 then
+                    if ID == tostring(Existing) then
+                        Possible = false
+                    end
+                else
+                    if tonumber(actualHour) ~= tonumber(Existing) then
+                        local delFile = pcall(function()
+                            delfile("NotSameServers.json")
+                            AllIDs = {}
+                            table.insert(AllIDs, actualHour)
+                        end)
+                    end
+                end
+                num = num + 1
+            end
+            if Possible == true then
+                table.insert(AllIDs, ID)
+                wait()
+                pcall(function()
+                    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                    wait()
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, Player)
+                end)
+                wait(4)
+            end
+        end
+    end
+end
+
+function Teleport()
+    while wait() do
+        pcall(function()
+            TPReturner()
+            if foundAnything ~= "" then
+                TPReturner()
+            end
+        end)
+    end
+end
+
+-- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
+Teleport() 
+end)
+local Button1 = Section2:CreateButton("Rejoin", function()
+game:GetService("TeleportService"):Teleport(game.PlaceId, Player) end)
+
+
+local Toggle3 = Section3:CreateToggle("UI Toggle", nil, function(State)
+	Window:Toggle(State)
+end)
+Toggle3:CreateKeybind(tostring(Config.Keybind):gsub("Enum.KeyCode.", ""), function(Key)
+	Config.Keybind = Enum.KeyCode[Key]
+end)
+Toggle3:SetState(true)
+Section3:CreateLabel("Credits DekuDimz#7960")
+Section3:CreateLabel("Credits AlexR32#3232 Ui")
+Section3:CreateLabel("Credits The3Bakers")
+Section3:CreateLabel("Credits snake587")
+local Colorpicker3 = Section3:CreateColorpicker("UI Color", function(Color)
+	Window:ChangeColor(Color)
+end)
+Colorpicker3:UpdateColor(Config.Color)
+
+-- credits to jan for patterns
+local Dropdown3 = Section4:CreateDropdown("Image", {"Default","Hearts","Abstract","Hexagon","Circles","Lace With Flowers","Floral"}, function(Name)
+	if Name == "Default" then
+		Window:SetBackground("2151741365")
+	elseif Name == "Hearts" then
+		Window:SetBackground("6073763717")
+	elseif Name == "Abstract" then
+		Window:SetBackground("6073743871")
+	elseif Name == "Hexagon" then
+		Window:SetBackground("6073628839")
+	elseif Name == "Circles" then
+		Window:SetBackground("6071579801")
+	elseif Name == "Lace With Flowers" then
+		Window:SetBackground("6071575925")
+	elseif Name == "Floral" then
+		Window:SetBackground("5553946656")
+	end
+end)
+Dropdown3:SetOption("Default")
+
+local Button1 = Section4:CreateButton("Save Settings", function()
+Save()
+end)
+
+local Colorpicker4 = Section4:CreateColorpicker("Color", function(Color)
+	Window:SetBackgroundColor(Color)
+end)
+Colorpicker4:UpdateColor(Color3.new(1,1,1))
+
+local Slider3 = Section4:CreateSlider("Transparency",0,1,nil,false, function(Value)
+	Window:SetBackgroundTransparency(Value)
+end)
+Slider3:SetValue(0)
+
+local Slider4 = Section4:CreateSlider("Tile Scale",0,1,nil,false, function(Value)
+	Window:SetTileScale(Value)
+end)
+Slider4:SetValue(0.5)
+
+
