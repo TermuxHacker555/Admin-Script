@@ -36,628 +36,449 @@ end
 
 function getplrsname() for i,v in pairs(game:GetChildren()) do if v.ClassName == "Players" then return v.Name end end end local players = getplrsname() local plr = game[players].LocalPlayer coroutine.resume(coroutine.create(function() while wait(1) do coroutine.resume(coroutine.create(function() for _,v in pairs(game[players]:GetPlayers()) do if v.Name ~= plr.Name and v.Character then v.Character.RightUpperLeg.CanCollide = false v.Character.RightUpperLeg.Transparency = 75 v.Character.RightUpperLeg.Size = Vector3.new(21,21,21) v.Character.LeftUpperLeg.CanCollide = false v.Character.LeftUpperLeg.Transparency = 75 v.Character.LeftUpperLeg.Size = Vector3.new(21,21,21) v.Character.HeadHB.CanCollide = false v.Character.HeadHB.Transparency = 75 v.Character.HeadHB.Size = Vector3.new(21,21,21) v.Character.HumanoidRootPart.CanCollide = false v.Character.HumanoidRootPart.Transparency = 75 v.Character.HumanoidRootPart.Size = Vector3.new(21,21,21) end end end)) end end))
 
---Made by Andrheyplayz_officalyt
-local gui = Instance.new("BillboardGui");
-gui.Name = "";
-gui.AlwaysOnTop = true;
-gui.LightInfluence = 0;
-gui.Size = UDim2.new(1.75, 0, 1.75, 0);
-local frame = Instance.new("Frame", gui);
-frame.BackgroundColor3 = Color3.fromRGB(170, 0, 0);
-frame.Size = UDim2.new(1, 0, 1, 0);
-frame.BorderSizePixel = 4;
-frame.BorderColor3 = Color3.fromRGB(0, 0, 0);
-local gi = gui:Clone();
-local body = frame:Clone();
-body.Parent = gi;
-body.BackgroundColor3 = Color3.fromRGB(0, 170, 170);
+--Settings--
+local ESP = {
+    Enabled = true,
+    Boxes = true,
+    BoxShift = CFrame.new(0,-1.5,0),
+	BoxSize = Vector3.new(4,6,0),
+    Color = Color3.fromRGB(255, 170, 0),
+    FaceCamera = false,
+    Names = true,
+    TeamColor = true,
+    Thickness = 3,
+    AttachShift = 3,
+    TeamMates = true,
+    Players = true,
+    
+    Objects = setmetatable({}, {__mode="kv"}),
+    Overrides = {}
+}
 
-for _, v in pairs(game:GetService("Players"):GetPlayers()) do
-    if v.Name ~= game:GetService("Players").LocalPlayer.Name and v.Character and v.Character:FindFirstChild("Head") then
-        gui:Clone().Parent = v.Character.Head;
-    end
+--Declarations--
+local cam = workspace.CurrentCamera
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local mouse = plr:GetMouse()
+
+local V3new = Vector3.new
+local WorldToViewportPoint = cam.WorldToViewportPoint
+
+--Functions--
+local function Draw(obj, props)
+	local new = Drawing.new(obj)
+	
+	props = props or {}
+	for i,v in pairs(props) do
+		new[i] = v
+	end
+	return new
 end
 
-local c = 1 function zigzag(X)  return math.acos(math.cos(X * math.pi)) / math.pi end game:GetService("RunService").RenderStepped:Connect(function()  if game.Workspace.Camera:FindFirstChild('Arms') then   for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do    if v.ClassName == 'MeshPart' then      v.Color = Color3.fromHSV(zigzag(c),1,1)     c = c + .0001    end   end  end end)
-net = true -- if false = do nothing
-notify = true -- set this to false if u don't want to see notiflication
-local drawing_new = Drawing.new
-local vector2_new = Vector2.new
-local vector3_new = Vector3.new
-local cframe_new = CFrame.new
-local cframe_angles = CFrame.Angles
-local color3_new = Color3.new
-local color3_hsv = Color3.fromHSV
-local math_floor = math.floor
-local raycast_params_new = RaycastParams.new
-local enum_rft_blk = Enum.RaycastFilterType.Blacklist
-
-local white = color3_new(255, 255, 255)
-local green = color3_new(0, 255, 0)
-
-local players = game:GetService("Players")
-local run_service = game:GetService("RunService")
-local workspace = game:GetService("Workspace")
-local uis = game:GetService("UserInputService")
-local rep_storage = game:GetService("ReplicatedStorage")
-
-local frame_wait = run_service.RenderStepped
-
-local local_player = players.LocalPlayer
-local mouse = local_player:GetMouse()
-local dummy_part = Instance.new("Part", nil)
-
-local camera = workspace:FindFirstChildOfClass("Camera")
-local screen_size = camera.ViewportSize
-local center_screen = vector2_new((screen_size.X / 2), (screen_size.Y / 2))
-
---<- allowed modify ->--
-
-local _aimsp_settings; _aimsp_settings = {
-
-    -- aimbot settings
-    use_aimbot = true,
-    use_wallcheck = true,
-    team_check = true,
-    loop_all_humanoids = true, -- will allow aimbot to everything that has a humanoid, likely *VERY* laggy
-    max_dist = 9e9, -- 9e9 = very big
-    allow_toggle = {
-        allow = true, -- turning this to false will make the aimbot toggle on right mouse button
-        key = Enum.KeyCode.Z;
-    },
-    prefer = {
-        looking_at_you = false, -- buggy
-        closest_to_center_screen = false, -- stable
-        closest_to_you = true, -- stable
-    },
-    toggle_hud_key = Enum.KeyCode.P,
-    smoothness = 2, -- anything over 5 = aim assist,  100 = lock on (using 1 might get u banned)
-    fov_size = 0; -- 0-0 = preferred
-
-    -- esp settings
-    use_esp = true,
-    esp_toggle_key = Enum.KeyCode.O,
-    rainbow_speed = 10,
-    use_rainbow = true,
-    tracers = true,
-    box = false,
-    name = true,
-    dist = true,
-    health = true; -- might not work on some games
-}
-
---<- allowed modify ->--
-
-if getgenv().aimsp_settings then 
-    getgenv().aimsp_settings = _aimsp_settings; 
-    return 
-end
-getgenv().aimsp_settings = _aimsp_settings
-
-local objects; objects = {
-    fov = nil,
-    text = nil,
-    chams = {},
-    tracers = {},
-    quads = {},
-    labels = {},
-    look_at = {
-        tracer = nil,
-        point = nil;
-    };
-}
-
-local debounces; debounces = {
-    start_aim = false,
-    custom_players = false,
-    spoofs_hum_health = false;
-}
-
-local utility; utility = {
-    get_rainbow = function()
-        return color3_hsv((tick() % aimsp_settings.rainbow_speed / aimsp_settings.rainbow_speed), 1, 1)
-    end,
-
-    get_part_corners = function(part)
-        local size = part.Size * vector3_new(1, 1.5, 0)
-
-        return {
-            top_right = (part.CFrame * cframe_new(-size.X, -size.Y, 0)).Position,
-            bottom_right = (part.CFrame * cframe_new(-size.X, size.Y, 0)).Position,
-            top_left = (part.CFrame * cframe_new(size.X, -size.Y, 0)).Position,
-            bottom_left = (part.CFrame * cframe_new(size.X, size.Y, 0)).Position,
-        }
-    end,
-
-    run_player_check = function()
-        local plrs = players:GetChildren()
-
-        for idx, val in pairs(objects.tracers) do
-            if not plrs[idx] then
-                utility.remove_esp(idx)
-            end
-        end
-    end,
-
-    remove_esp = function(name)
-        utility.update_drawing(objects.tracers, name, {
-            Visible = false,
-            instance = "Line";
-        })
-
-        utility.update_drawing(objects.quads, name, {
-            Visible = false,
-            instance = "Quad";
-        })
-
-        utility.update_drawing(objects.labels, name, {
-            Visible = false,
-            instance = "Text";
-        })
-    end,
-
-    update = function(str)
-        if objects.fov.Visible then
-            objects.text.Text = str
-            objects.text.Visible = true
-
-            wait(1)
-
-            objects.text.Visible = false
-        end
-    end,
-
-    is_inside_fov = function(point)
-        return (point.x - objects.fov.Position.X) ^ 2 + (point.y - objects.fov.Position.Y) ^ 2 <= objects.fov.Radius ^ 2
-    end,
-    
-    to_screen = function(point)
-        local screen_pos, in_screen = camera:WorldToViewportPoint(point)
-        
-        return (in_screen and vector2_new(screen_pos.X, screen_pos.Y)) or -1
-    end,
-
-    is_part_visible = function(origin_part, part)
-        if not aimsp_settings.use_wallcheck then
-            return true
-        end
-
-        local function run_cast(origin_pos)
-            local raycast_params = raycast_params_new()
-            raycast_params.FilterType = enum_rft_blk
-            raycast_params.FilterDescendantsInstances = {origin_part.Parent}
-            raycast_params.IgnoreWater = true
-            
-            local raycast_result = workspace:Raycast(origin_pos, (part.Position - origin_pos).Unit * aimsp_settings.max_dist, raycast_params)
-
-            return ((raycast_result and raycast_result.Instance) or dummy_part):IsDescendantOf(part.Parent) 
-        end
-
-        local head_pos = (origin_part.Position + (origin_part.CFrame.UpVector * 2) + (origin_part.CFrame.LookVector))
-
-        local cast_table = {
-            origin_part.CFrame.UpVector * 2,
-            -origin_part.CFrame.UpVector * 2,
-            origin_part.CFrame.RightVector * 2,
-            -origin_part.CFrame.RightVector * 2,
-            vector3_new(0, 0, 0);
-        }
-
-        for idx, val in pairs(cast_table) do
-            if run_cast(head_pos + val) == true then
-                return true
-            end
-        end
-
-        return false
-    end,
-    
-    is_dead = function(char)
-        if debounces.spoofs_hum_health then
-            local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso")
-            if torso and #(torso:GetChildren()) < 10 then
-                return true
-            end
-        else
-            local hum = char:FindFirstChild("Humanoid")
-            if hum and hum.Health == 0 then
-                return true
-            end
-        end
-
-        return false
-    end,
-
-    update_drawing = function(tbl, child, val)
-        if not tbl[child] then
-            tbl[child] = utility.new_drawing(val.instance)(val)
-        end
-        
-        for idx, val in pairs(val) do
-            if idx ~= "instance" then
-                tbl[child][idx] = val
-            end
-        end
-        
-        return tbl[child]
-    end,
-    
-    new_drawing = function(classname)
-        return function(tbl)
-            local draw = drawing_new(classname)
-            
-            for idx, val in pairs(tbl) do
-                if idx ~= "instance" then
-                    draw[idx] = val
-                end
-            end
-            
-            return draw
-        end
-    end
-}
-
-objects.text = utility.new_drawing("Text"){
-    Transparency = 1,
-    Visible = false,
-    Center = true,
-    Size = 24,
-    Color = white,
-    Position = vector2_new(screen_size.X - 100, 36);
-}
-
-objects.fov = utility.new_drawing("Circle"){
-    Thickness = 1,
-    Transparency = 1,
-    Visible = true,
-    Color = white,
-    Position = center_screen,
-    Radius = aimsp_settings.fov_size;
-}
-
-players.PlayerRemoving:Connect(function(plr)
-    utility.remove_esp(plr.Name)
-end)
-
-uis.InputBegan:Connect(function(key, gmp)
-    if gmp then return end
-
-    if key.KeyCode == aimsp_settings.allow_toggle.key and aimsp_settings.allow_toggle.allow then
-        debounces.start_aim = not debounces.start_aim
-        
-        utility.update("toggled aimbot: " .. tostring(debounces.start_aim))
-    elseif key.KeyCode == aimsp_settings.toggle_hud_key then
-        objects.fov.Visible = not objects.fov.Visible
-    elseif key.KeyCode == aimsp_settings.esp_toggle_key then
-        aimsp_settings.use_esp = not aimsp_settings.use_esp
-
-        utility.update("toggled esp: " .. tostring(aimsp_settings.use_esp))
-    end
-end)
-
-if not aimsp_settings.allow_toggle.allow then
-    mouse.Button2Down:Connect(function()
-        debounces.start_aim = true
-    end)
-    
-    mouse.Button2Up:Connect(function()
-        debounces.start_aim = false
-    end)
+function ESP:GetTeam(p)
+	local ov = self.Overrides.GetTeam
+	if ov then
+		return ov(p)
+	end
+	
+	return p and p.Team
 end
 
-function delay()
-    frame_wait:Wait()
-    --[[
-        if you are lagging, replace this comment with the line below
-        frame_wait:Wait()
-    ]]
-    return true
+function ESP:IsTeamMate(p)
+    local ov = self.Overrides.IsTeamMate
+	if ov then
+		return ov(p)
+    end
+    
+    return self:GetTeam(p) == self:GetTeam(plr)
 end
 
-local get_players; -- create custom function for every game so that it doesnt check placeid every frame
-
-if aimsp_settings.loop_all_humanoids then -- self explanitory
-    get_players = function()
-        local instance_table = {}
-
-        for idx, val in pairs(workspace:GetDescendants()) do
-            if val:IsA("Model") and val:FindFirstChildOfClass("Humanoid") then
-                instance_table[#instance_table + 1] = val
-            end
-        end
-
-        return instance_table
+function ESP:GetColor(obj)
+	local ov = self.Overrides.GetColor
+	if ov then
+		return ov(obj)
     end
-elseif game.PlaceId == 18164449 then -- base wars
-    debounces.spoofs_hum_health = true
-elseif game.PlaceId == 292439477 then -- phantom forces
-    debounces.custom_players = true
+    local p = self:GetPlrFromChar(obj)
+	return p and self.TeamColor and p.Team and p.Team.TeamColor.Color or self.Color
+end
 
-    get_players = function()
-        local local_team = local_player.Character.Parent -- your character is not nil
+function ESP:GetPlrFromChar(char)
+	local ov = self.Overrides.GetPlrFromChar
+	if ov then
+		return ov(char)
+	end
+	
+	return plrs:GetPlayerFromCharacter(char)
+end
 
-        local get_team;
-
-        if local_team then
-            if aimsp_settings.team_check then
-                if local_team.Name == "Phantoms" then
-                    get_team = "Ghosts"
+function ESP:Toggle(bool)
+    self.Enabled = bool
+    if not bool then
+        for i,v in pairs(self.Objects) do
+            if v.Type == "Box" then --fov circle etc
+                if v.Temporary then
+                    v:Remove()
                 else
-                    get_team = "Phantoms"
+                    for i,v in pairs(v.Components) do
+                        v.Visible = false
+                    end
                 end
-    
-                return local_team.Parent[get_team]:GetChildren()
+            end
+        end
+    end
+end
+
+function ESP:GetBox(obj)
+    return self.Objects[obj]
+end
+
+function ESP:AddObjectListener(parent, options)
+    local function NewListener(c)
+        if type(options.Type) == "string" and c:IsA(options.Type) or options.Type == nil then
+            if type(options.Name) == "string" and c.Name == options.Name or options.Name == nil then
+                if not options.Validator or options.Validator(c) then
+                    local box = ESP:Add(c, {
+                        PrimaryPart = type(options.PrimaryPart) == "string" and c:WaitForChild(options.PrimaryPart) or type(options.PrimaryPart) == "function" and options.PrimaryPart(c),
+                        Color = type(options.Color) == "function" and options.Color(c) or options.Color,
+                        ColorDynamic = options.ColorDynamic,
+                        Name = type(options.CustomName) == "function" and options.CustomName(c) or options.CustomName,
+                        IsEnabled = options.IsEnabled,
+                        RenderInNil = options.RenderInNil
+                    })
+                    if options.OnAdded then
+                        coroutine.wrap(options.OnAdded)(box)
+                    end
+                end
+            end
+        end
+    end
+
+    if options.Recursive then
+        parent.DescendantAdded:Connect(NewListener)
+        for i,v in pairs(parent:GetDescendants()) do
+            NewListener(v)
+        end
+    else
+        parent.ChildAdded:Connect(NewListener)
+        for i,v in pairs(parent:GetChildren()) do
+            NewListener(v)
+        end
+    end
+end
+
+local boxBase = {}
+boxBase.__index = boxBase
+
+function boxBase:Remove()
+    ESP.Objects[self.Object] = nil
+    for i,v in pairs(self.Components) do
+        v.Visible = false
+        v:Remove()
+        self.Components[i] = nil
+    end
+end
+
+function boxBase:Update()
+    if not self.PrimaryPart then
+        --warn("not supposed to print", self.Object)
+        return self:Remove()
+    end
+
+    local color
+    if ESP.Highlighted == self.Object then
+       color = ESP.HighlightColor
+    else
+        color = self.Color or self.ColorDynamic and self:ColorDynamic() or ESP:GetColor(self.Object) or ESP.Color
+    end
+
+    local allow = true
+    if ESP.Overrides.UpdateAllow and not ESP.Overrides.UpdateAllow(self) then
+        allow = false
+    end
+    if self.Player and not ESP.TeamMates and ESP:IsTeamMate(self.Player) then
+        allow = false
+    end
+    if self.Player and not ESP.Players then
+        allow = false
+    end
+    if self.IsEnabled and (type(self.IsEnabled) == "string" and not ESP[self.IsEnabled] or type(self.IsEnabled) == "function" and not self:IsEnabled()) then
+        allow = false
+    end
+    if not workspace:IsAncestorOf(self.PrimaryPart) and not self.RenderInNil then
+        allow = false
+    end
+
+    if not allow then
+        for i,v in pairs(self.Components) do
+            v.Visible = false
+        end
+        return
+    end
+
+    if ESP.Highlighted == self.Object then
+        color = ESP.HighlightColor
+    end
+
+    --calculations--
+    local cf = self.PrimaryPart.CFrame
+    if ESP.FaceCamera then
+        cf = CFrame.new(cf.p, cam.CFrame.p)
+    end
+    local size = self.Size
+    local locs = {
+        TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
+        TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
+        BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
+        BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
+        TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
+        Torso = cf * ESP.BoxShift
+    }
+
+    if ESP.Boxes then
+        local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
+        local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
+        local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
+        local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
+
+        if self.Components.Quad then
+            if Vis1 or Vis2 or Vis3 or Vis4 then
+                self.Components.Quad.Visible = true
+                self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
+                self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
+                self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
+                self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
+                self.Components.Quad.Color = color
             else
-                local instance_table = {}
-
-                for idx, val in pairs(local_team.Parent.Phantoms:GetChildren()) do
-                    if val:IsA("Model") then
-                        instance_table[#instance_table + 1] = val
-                    end
-                end
-
-                for idx, val in pairs(local_team.Parent.Ghosts:GetChildren()) do
-                    if val:IsA("Model") then
-                        instance_table[#instance_table + 1] = val
-                    end
-                end
-
-                return instance_table -- return both teams
+                self.Components.Quad.Visible = false
             end
         end
-
-        return {} -- player is likely dead, return empty table so the mouse doesnt go apeshit
-    end
---[[
-    elseif game.PlaceId == 3233893879 then -- bad business
-
-    local TS = require(rep_storage:WaitForChild("TS"))
-    local net_module
-
-    for idx, val in pairs(rep_storage:GetChildren()) do
-        local children = val:GetChildren()
-        if val.Name == " " and #children ~= 1 then
-            for _idx, _val in pairs(children) do
-                local module = require(_val)
-                if module.Fire then
-                    net_module = module -- found it
-                end
-            end
-        end
+    else
+        self.Components.Quad.Visible = false
     end
 
-    get_players = function()
+    if ESP.Names then
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
         
+        if Vis5 then
+            self.Components.Name.Visible = true
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Text = self.Name
+            self.Components.Name.Color = color
+            
+            self.Components.Distance.Visible = true
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 0)
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
+            self.Components.Distance.Color = color
+        else
+            self.Components.Name.Visible = false
+            self.Components.Distance.Visible = false
+        end
+    else
+        self.Components.Name.Visible = false
+        self.Components.Distance.Visible = false
     end
+    
+    if ESP.Tracers then
+        local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
 
-    return {}
-]]
-else -- normal players
-    get_players = function()
-        return players:GetChildren()
+        if Vis6 then
+            self.Components.Tracer.Visible = true
+            self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
+            self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
+            self.Components.Tracer.Color = color
+        else
+            self.Components.Tracer.Visible = false
+        end
+    else
+        self.Components.Tracer.Visible = false
     end
 end
 
-coroutine.wrap(function()
-    while delay() do
-        local func, result = pcall(function()
-            utility.update_drawing(objects, "fov", {
-                Radius = aimsp_settings.fov_size,
-                Color = (aimsp_settings.use_rainbow and utility.get_rainbow()) or white,
-                instance = "Circle";
-            })
+function ESP:Add(obj, options)
+    if not obj.Parent and not options.RenderInNil then
+        return warn(obj, "has no parent")
+    end
 
-            utility.run_player_check()
+    local box = setmetatable({
+        Name = options.Name or obj.Name,
+        Type = "Box",
+        Color = options.Color --[[or self:GetColor(obj)]],
+        Size = options.Size or self.BoxSize,
+        Object = obj,
+        Player = options.Player or plrs:GetPlayerFromCharacter(obj),
+        PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
+        Components = {},
+        IsEnabled = options.IsEnabled,
+        Temporary = options.Temporary,
+        ColorDynamic = options.ColorDynamic,
+        RenderInNil = options.RenderInNil
+    }, boxBase)
 
-            local closest_player = nil
-            local dist = aimsp_settings.max_dist
-            
-            for idx, plr in pairs(get_players()) do -- continue skips current index
-                local plr_char = ((aimsp_settings.loop_all_humanoids or debounces.custom_players) and plr) or plr.Character
-                if plr == local_player then continue; end
-                if plr_char == nil then continue; end
+    if self:GetBox(obj) then
+        self:GetBox(obj):Remove()
+    end
 
-                if debounces.custom_players then -- teamcheck for games with custom chars
-                    if plr_char.Parent == local_player.Character.Parent then continue; end
-                end
-                
-                if aimsp_settings.team_check and not aimsp_settings.loop_all_humanoids and not debounces.custom_players then
-                    if plr.Team then
-                        if plr.TeamColor == local_player.TeamColor then continue; end
-                        if plr.Team == local_player.Team then continue; end
-                    end
-                end
-                
-                if not utility.is_dead(plr_char) then
-                    local plr_screen = utility.to_screen(plr_char.HumanoidRootPart.Position + (plr_char.HumanoidRootPart.CFrame.UpVector * 2)) -- emulate head pos
-                    
-                    if plr_screen ~= -1 then
-                        local mag = (plr_char.HumanoidRootPart.Position - local_player.Character.HumanoidRootPart.Position).Magnitude
-                        
-                        if aimsp_settings.use_esp then
-                            local col = (aimsp_settings.use_rainbow and utility.get_rainbow()) or white
-                            
-                            if aimsp_settings.tracers then
-                                utility.update_drawing(objects.tracers, plr_char:GetDebugId(), {
-                                    Visible = objects.fov.Visible,
-                                    Thickness = 1,
-                                    Color = (aimsp_settings.use_rainbow and utility.get_rainbow()) or color3_new(255 / mag, mag / 255, 0),
-                                    To = plr_screen,
-                                    From = vector2_new(screen_size.X / 2, screen_size.Y - 36),
-                                    instance = "Line";
-                                })
-                            end
-                            
-                            if aimsp_settings.box then
-                                local corners = utility.get_part_corners(plr_char.HumanoidRootPart)
+    box.Components["Quad"] = Draw("Quad", {
+        Thickness = self.Thickness,
+        Color = color,
+        Transparency = 1,
+        Filled = false,
+        Visible = self.Enabled and self.Boxes
+    })
+    box.Components["Name"] = Draw("Text", {
+		Text = box.Name,
+		Color = box.Color,
+		Center = true,
+		Outline = true,
+        Size = 19,
+        Visible = self.Enabled and self.Names
+	})
+	box.Components["Distance"] = Draw("Text", {
+		Color = box.Color,
+		Center = true,
+		Outline = true,
+        Size = 19,
+        Visible = self.Enabled and self.Names
+	})
+	
+	box.Components["Tracer"] = Draw("Line", {
+		Thickness = ESP.Thickness,
+		Color = box.Color,
+        Transparency = 1,
+        Visible = self.Enabled and self.Tracers
+    })
+    self.Objects[obj] = box
+    
+    obj.AncestryChanged:Connect(function(_, parent)
+        if parent == nil and ESP.AutoRemove ~= false then
+            box:Remove()
+        end
+    end)
+    obj:GetPropertyChangedSignal("Parent"):Connect(function()
+        if obj.Parent == nil and ESP.AutoRemove ~= false then
+            box:Remove()
+        end
+    end)
 
-                                local point_a_scr = utility.to_screen(corners.top_left)
-                                local point_b_scr = utility.to_screen(corners.top_right)
-                                local point_c_scr = utility.to_screen(corners.bottom_right)
-                                local point_d_scr = utility.to_screen(corners.bottom_left)
-
-                                if (point_a_scr ~= -1) and (point_b_scr ~= -1) and (point_c_scr ~= -1) and (point_d_scr ~= -1) then
-                                    utility.update_drawing(objects.quads, plr_char:GetDebugId(), {
-                                        Visible = objects.fov.Visible,
-                                        Thickness = 1,
-                                        Color = col,
-                                        PointA = point_a_scr,
-                                        PointB = point_b_scr,
-                                        PointC = point_c_scr,
-                                        PointD = point_d_scr,
-                                        instance = "Quad";
-                                    })
-                                end
-                            end
-
-                            local plr_info = ""
-
-                            if aimsp_settings.name then
-                                plr_info = plr_info .. (plr.Name .. "\n")
-                            end
-                            if aimsp_settings.dist then
-                                plr_info = plr_info .. (tostring(math_floor(mag)) .. " Studs Away\n")
-                            end
-                            if aimsp_settings.health then
-                                local hum = plr_char:FindFirstChildOfClass("Humanoid")
-
-                                plr_info = (hum and plr_info .. ("[" .. tostring(hum.Health) .. "/" .. tostring(hum.MaxHealth) .. "]" )) or plr_info
-                            end
-
-                            if plr_info ~= "" then
-                                local cam_mag = (camera.CFrame.Position - plr_char.HumanoidRootPart.CFrame.Position).Magnitude / 20
-
-                                local scr_pos = utility.to_screen(
-                                    plr_char.HumanoidRootPart.Position +
-                                    vector3_new(0, 4, 0) +
-                                    (plr_char.HumanoidRootPart.CFrame.UpVector * cam_mag)
-                                )
-
-                                if scr_pos ~= -1 then
-                                    utility.update_drawing(objects.labels, plr_char:GetDebugId(), {
-                                        Visible = objects.fov.Visible,
-                                        Color = col,
-                                        Position = scr_pos,
-                                        Text = plr_info,
-                                        Center = true,
-                                        instance = "Text";
-                                    })
-                                else
-                                    utility.update_drawing(objects.labels, plr_char:GetDebugId(), {
-                                        Visible = false,
-                                        instance = "Text";
-                                    })
-                                end
-                            end
-                        else
-                            utility.remove_esp(plr_char:GetDebugId())
-                        end
-
-                        if aimsp_settings.prefer.looking_at_you then
-                            local look_vector = plr_char.HumanoidRootPart.Position + (plr_char.HumanoidRootPart.CFrame.LookVector * mag)
-
-                            local look_vector_lp_head_dist = (look_vector - local_player.Character.HumanoidRootPart.Position).Magnitude
-                            if look_vector_lp_head_dist < dist and utility.is_inside_fov(plr_screen) then
-                                dist = look_vector_lp_head_dist
-                                closest_player = plr_char
-                            end
-                        elseif aimsp_settings.prefer.closest_to_center_screen then
-                            local plr_scr_dist = (center_screen - plr_screen).Magnitude
-                            if plr_scr_dist < dist then
-                                dist = plr_scr_dist
-                                closest_player = plr_char
-                            end
-                        elseif aimsp_settings.prefer.closest_to_you then
-                            local plr_dist = (plr_char.HumanoidRootPart.Position - local_player.Character.HumanoidRootPart.Position).Magnitude
-                            if plr_dist < dist then
-                                dist = plr_dist
-                                closest_player = plr_char
-                            end
-                        end
-                    else
-                        utility.remove_esp(plr_char:GetDebugId())
-                    end
-                else
-                    utility.remove_esp(plr_char:GetDebugId())
-                end
+    local hum = obj:FindFirstChildOfClass("Humanoid")
+	if hum then
+        hum.Died:Connect(function()
+            if ESP.AutoRemove ~= false then
+                box:Remove()
             end
+		end)
+    end
 
-            local visible_parts = {}
-            local last
-            
-            if closest_player and aimsp_settings.use_aimbot then
-                for idx, part in pairs(closest_player:GetChildren()) do
-                    if part:IsA("BasePart") then
-                        local screen_pos = utility.to_screen(part.Position)
-    
-                        if screen_pos ~= -1 then
-                            if utility.is_inside_fov(screen_pos) and utility.is_part_visible(local_player.Character.HumanoidRootPart, part) then
-                                last = {
-                                    scr_pos = screen_pos,
-                                    obj = part;
-                                };
-                                visible_parts[part.Name] = last
-                            end
-                        end
-                    end
-                end
-                
-                if visible_parts["Head"] then
-                    visible_parts[0] = visible_parts["Head"]
-                elseif visible_parts["UpperTorso"] or visible_parts["Torso"] then
-                    visible_parts[0] = visible_parts["UpperTorso"] or visible_parts["Torso"]
-                end
+    return box
+end
 
-                local lock_part = visible_parts[0] or last
-
-                if lock_part then
-                    local scale = (lock_part.obj.Size.Y / 2)
-
-                    local top = utility.to_screen((lock_part.obj.CFrame * cframe_new(0, scale, 0)).Position);
-                    local bottom = utility.to_screen((lock_part.obj.CFrame * cframe_new(0, -scale, 0)).Position);
-                    local radius = -(top - bottom).y;
-
-                    utility.update_drawing(objects.look_at, "point", {
-                        Transparency = 1,
-                        Thickness = 1,
-                        Radius = radius / 2,
-                        Visible = objects.fov.Visible,
-                        Color = (debounces.start_aim and green) or white,
-                        Position = lock_part.scr_pos,
-                        instance = "Circle";
-                    })
-
-                    if debounces.start_aim then
-                        utility.update_drawing(objects.look_at, "tracer", {
-                            Transparency = 1,
-                            Thickness = 1,
-                            Visible = objects.fov.Visible,
-                            Color = green,
-                            From = center_screen,
-                            To = lock_part.scr_pos,
-                            instance = "Line";
-                        })
-
-                        mousemoverel((lock_part.scr_pos.X - mouse.X) / aimsp_settings.smoothness, (lock_part.scr_pos.Y - (mouse.Y + 36)) / aimsp_settings.smoothness)
-                    else
-                        utility.update_drawing(objects.look_at, "tracer", {
-                            Visible = false,
-                            instance = "Line";
-                        })
-                    end
-                else
-                    utility.update_drawing(objects.look_at, "point", {
-                        Visible = false,
-                        instance = "Circle";
-                    })
-    
-                    utility.update_drawing(objects.look_at, "tracer", {
-                        Visible = false,
-                        instance = "Line";
-                    })
-                end
+local function CharAdded(char)
+    local p = plrs:GetPlayerFromCharacter(char)
+    if not char:FindFirstChild("HumanoidRootPart") then
+        local ev
+        ev = char.ChildAdded:Connect(function(c)
+            if c.Name == "HumanoidRootPart" then
+                ev:Disconnect()
+                ESP:Add(char, {
+                    Name = p.Name,
+                    Player = p,
+                    PrimaryPart = c
+                })
             end
         end)
-        if not func then --[[warn(result)]] end
+    else
+        ESP:Add(char, {
+            Name = p.Name,
+            Player = p,
+            PrimaryPart = char.HumanoidRootPart
+        })
     end
-end)()
+end
+local function PlayerAdded(p)
+    p.CharacterAdded:Connect(CharAdded)
+    if p.Character then
+        coroutine.wrap(CharAdded)(p.Character)
+    end
+end
+plrs.PlayerAdded:Connect(PlayerAdded)
+for i,v in pairs(plrs:GetPlayers()) do
+    if v ~= plr then
+        PlayerAdded(v)
+    end
+end
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    cam = workspace.CurrentCamera
+    for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
+        if v.Update then
+            local s,e = pcall(v.Update, v)
+            if not s then warn("[EU]", e, v.Object:GetFullName()) end
+        end
+    end
+end)
+
+return ESP
+
+_G.FriendColor = Color3.fromRGB(0, 0, 255)
+_G.EnemyColor = Color3.fromRGB(255, 0, 0)
+_G.UseTeamColor = true
+if _G.Reantheajfdfjdgse then
+    return
+end
+
+_G.Reantheajfdfjdgse = "susan"
+
+local coregui = game:GetService("CoreGui")
+local players = game:GetService("Players")
+local plr = players.LocalPlayer
+
+local highlights = {}
+
+function esp(target, color)
+    pcall(function()
+        if target.Character then
+            if not highlights[target] then
+                local highlight = Instance.new("Highlight", coregui)
+                highlight.Name = target.Name
+                highlight.Adornee = target.Character
+                highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                highlight.FillColor = color
+                highlights[target] = highlight
+            else
+                highlights[target].FillColor = color
+            end
+        end
+    end)
+end
+
+players.PlayerAdded:Connect(function(v)
+    v.CharacterAdded:Connect(function()
+        esp(v, _G.UseTeamColor and v.TeamColor.Color or ((plr.TeamColor == v.TeamColor) and _G.FriendColor or _G.EnemyColor))
+    end)
+end)
+
+players.PlayerRemoving:Connect(function(v)
+    if highlights[v] then
+        highlights[v]:Destroy()
+        highlights[v] = nil
+    end
+end)
+
+for i, v in pairs(players:GetPlayers()) do
+    if v ~= plr then
+        local color = _G.UseTeamColor and v.TeamColor.Color or ((plr.TeamColor == v.TeamColor) and _G.FriendColor or _G.EnemyColor)
+        v.CharacterAdded:Connect(function()
+            local color = _G.UseTeamColor and v.TeamColor.Color or ((plr.TeamColor == v.TeamColor) and _G.FriendColor or _G.EnemyColor)
+            esp(v, color)
+        end)
+        
+        esp(v, color)
+    end
+end
+
+while task.wait() do
+    for i, v in pairs(highlights) do
+        local color = _G.UseTeamColor and i.TeamColor.Color or ((plr.TeamColor == i.TeamColor) and _G.FriendColor or _G.EnemyColor)
+        v.FillColor = color
+    end
+end
