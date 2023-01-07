@@ -1,0 +1,1174 @@
+--synapse only
+
+local Chathax = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local run = Instance.new("TextButton")
+local Close = Instance.new("TextButton")
+local ImageLabel = Instance.new("ImageLabel")
+local ImageLabel_2 = Instance.new("ImageLabel")
+local topText = Instance.new("TextLabel")
+local Borders = Instance.new("Frame")
+local Border = Instance.new("ImageLabel")
+local NineBox_BottomRight = Instance.new("ImageLabel")
+local NineBox_Bottom = Instance.new("ImageLabel")
+local NineBox_BottomLeft = Instance.new("ImageLabel")
+local NineBox_Right = Instance.new("ImageLabel")
+local NineBox_Center = Instance.new("ImageLabel")
+local NineBox_Left = Instance.new("ImageLabel")
+local NineBox_TopRight = Instance.new("ImageLabel")
+local NineBox_Top = Instance.new("ImageLabel")
+local NineBox_TopLeft = Instance.new("ImageLabel")
+local Border_2 = Instance.new("ImageLabel")
+local NineBox_BottomRight_2 = Instance.new("ImageLabel")
+local NineBox_Bottom_2 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_2 = Instance.new("ImageLabel")
+local NineBox_Right_2 = Instance.new("ImageLabel")
+local NineBox_Center_2 = Instance.new("ImageLabel")
+local NineBox_Left_2 = Instance.new("ImageLabel")
+local NineBox_TopRight_2 = Instance.new("ImageLabel")
+local NineBox_Top_2 = Instance.new("ImageLabel")
+local NineBox_TopLeft_2 = Instance.new("ImageLabel")
+local Border_3 = Instance.new("ImageLabel")
+local NineBox_BottomRight_3 = Instance.new("ImageLabel")
+local NineBox_Bottom_3 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_3 = Instance.new("ImageLabel")
+local NineBox_Right_3 = Instance.new("ImageLabel")
+local NineBox_Center_3 = Instance.new("ImageLabel")
+local NineBox_Left_3 = Instance.new("ImageLabel")
+local NineBox_TopRight_3 = Instance.new("ImageLabel")
+local NineBox_Top_3 = Instance.new("ImageLabel")
+local NineBox_TopLeft_3 = Instance.new("ImageLabel")
+local Border_4 = Instance.new("ImageLabel")
+local NineBox_BottomRight_4 = Instance.new("ImageLabel")
+local NineBox_Bottom_4 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_4 = Instance.new("ImageLabel")
+local NineBox_Right_4 = Instance.new("ImageLabel")
+local NineBox_Center_4 = Instance.new("ImageLabel")
+local NineBox_Left_4 = Instance.new("ImageLabel")
+local NineBox_TopRight_4 = Instance.new("ImageLabel")
+local NineBox_Top_4 = Instance.new("ImageLabel")
+local NineBox_TopLeft_4 = Instance.new("ImageLabel")
+local Border_5 = Instance.new("ImageLabel")
+local NineBox_BottomRight_5 = Instance.new("ImageLabel")
+local NineBox_Bottom_5 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_5 = Instance.new("ImageLabel")
+local NineBox_Right_5 = Instance.new("ImageLabel")
+local NineBox_Center_5 = Instance.new("ImageLabel")
+local NineBox_Left_5 = Instance.new("ImageLabel")
+local NineBox_TopRight_5 = Instance.new("ImageLabel")
+local NineBox_Top_5 = Instance.new("ImageLabel")
+local NineBox_TopLeft_5 = Instance.new("ImageLabel")
+local Border_6 = Instance.new("ImageLabel")
+local NineBox_BottomRight_6 = Instance.new("ImageLabel")
+local NineBox_Bottom_6 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_6 = Instance.new("ImageLabel")
+local NineBox_Right_6 = Instance.new("ImageLabel")
+local NineBox_Center_6 = Instance.new("ImageLabel")
+local NineBox_Left_6 = Instance.new("ImageLabel")
+local NineBox_TopRight_6 = Instance.new("ImageLabel")
+local NineBox_Top_6 = Instance.new("ImageLabel")
+local NineBox_TopLeft_6 = Instance.new("ImageLabel")
+local Border_7 = Instance.new("ImageLabel")
+local NineBox_BottomRight_7 = Instance.new("ImageLabel")
+local NineBox_Bottom_7 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_7 = Instance.new("ImageLabel")
+local NineBox_Right_7 = Instance.new("ImageLabel")
+local NineBox_Center_7 = Instance.new("ImageLabel")
+local NineBox_Left_7 = Instance.new("ImageLabel")
+local NineBox_TopRight_7 = Instance.new("ImageLabel")
+local NineBox_Top_7 = Instance.new("ImageLabel")
+local NineBox_TopLeft_7 = Instance.new("ImageLabel")
+local Border_8 = Instance.new("ImageLabel")
+local NineBox_BottomRight_8 = Instance.new("ImageLabel")
+local NineBox_Bottom_8 = Instance.new("ImageLabel")
+local NineBox_BottomLeft_8 = Instance.new("ImageLabel")
+local NineBox_Right_8 = Instance.new("ImageLabel")
+local NineBox_Center_8 = Instance.new("ImageLabel")
+local NineBox_Left_8 = Instance.new("ImageLabel")
+local NineBox_TopRight_8 = Instance.new("ImageLabel")
+local NineBox_Top_8 = Instance.new("ImageLabel")
+local NineBox_TopLeft_8 = Instance.new("ImageLabel")
+local Border_9 = Instance.new("ImageButton")
+local message = Instance.new("TextBox")
+local Border_10 = Instance.new("ImageButton")
+local player = Instance.new("TextBox")
+
+--Properties:
+
+Chathax.Name = "Chathax"
+Chathax.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Chathax.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Chathax.ResetOnSpawn = false
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = Chathax
+MainFrame.Active = true
+MainFrame.BackgroundColor3 = Color3.fromRGB(137, 40, 231)
+MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.Position = UDim2.new(0.202211693, 0, 0.257142872, 0)
+MainFrame.Selectable = true
+MainFrame.Size = UDim2.new(0, 391, 0, 253)
+
+run.Name = "run"
+run.Parent = MainFrame
+run.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+run.BorderSizePixel = 0
+run.Position = UDim2.new(0.082251586, 0, 0.731225312, 0)
+run.Size = UDim2.new(0, 323, 0, 46)
+run.Font = Enum.Font.SourceSans
+run.Text = "Chat"
+run.TextColor3 = Color3.fromRGB(0, 0, 0)
+run.TextScaled = true
+run.TextSize = 14.000
+run.TextWrapped = true
+
+Close.Name = "Close"
+Close.Parent = MainFrame
+Close.BackgroundColor3 = Color3.fromRGB(247, 114, 99)
+Close.Position = UDim2.new(0.915371954, 10, 1.05738115, -280)
+Close.Size = UDim2.new(0, 28, 0, 24)
+Close.ZIndex = 7
+Close.Font = Enum.Font.SourceSansBold
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextSize = 18.000
+Close.TextWrapped = true
+
+ImageLabel.Parent = Close
+ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel.BackgroundTransparency = 1.000
+ImageLabel.Position = UDim2.new(-0.392857194, 0, -0.511363626, 0)
+ImageLabel.Size = UDim2.new(0, 49, 0, 49)
+ImageLabel.Image = "rbxassetid://282305376"
+ImageLabel.ImageColor3 = Color3.fromRGB(247, 114, 99)
+
+ImageLabel_2.Parent = Close
+ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_2.BackgroundTransparency = 1.000
+ImageLabel_2.Position = UDim2.new(-0.0357143283, 0, -0.193181813, 0)
+ImageLabel_2.Size = UDim2.new(0, 30, 0, 30)
+ImageLabel_2.Image = "rbxassetid://168705076"
+
+topText.Name = "topText"
+topText.Parent = MainFrame
+topText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+topText.BackgroundTransparency = 1.000
+topText.Size = UDim2.new(0, 390, 0, 50)
+topText.Font = Enum.Font.SourceSans
+topText.Text = "UTG CHATHAX"
+topText.TextColor3 = Color3.fromRGB(255, 255, 255)
+topText.TextSize = 45.000
+
+Borders.Name = "Borders"
+Borders.Parent = MainFrame
+Borders.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Borders.BackgroundTransparency = 1.000
+Borders.BorderSizePixel = 0
+Borders.Size = UDim2.new(0, 391, 0, 253)
+
+Border.Name = "Border"
+Border.Parent = Borders
+Border.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border.BackgroundTransparency = 1.000
+Border.BorderSizePixel = 0
+Border.Position = UDim2.new(0, -12, 0, -12)
+Border.Size = UDim2.new(0, 12, 0, 12)
+Border.Image = "rbxassetid://238725003"
+Border.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border.ImageRectSize = Vector2.new(12, 12)
+Border.ImageTransparency = 1.000
+
+NineBox_BottomRight.Name = "NineBox_BottomRight"
+NineBox_BottomRight.Parent = Border
+NineBox_BottomRight.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight.BackgroundTransparency = 1.000
+NineBox_BottomRight.BorderSizePixel = 0
+NineBox_BottomRight.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight.Image = "rbxassetid://238725003"
+NineBox_BottomRight.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight.ImageRectOffset = Vector2.new(6, 6)
+NineBox_BottomRight.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom.Name = "NineBox_Bottom"
+NineBox_Bottom.Parent = Border
+NineBox_Bottom.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom.BackgroundTransparency = 1.000
+NineBox_Bottom.BorderSizePixel = 0
+NineBox_Bottom.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom.Image = "rbxassetid://238725003"
+NineBox_Bottom.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom.ImageRectOffset = Vector2.new(6, 6)
+NineBox_Bottom.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft.Parent = Border
+NineBox_BottomLeft.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft.BackgroundTransparency = 1.000
+NineBox_BottomLeft.BorderSizePixel = 0
+NineBox_BottomLeft.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft.Image = "rbxassetid://238725003"
+NineBox_BottomLeft.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft.ImageRectOffset = Vector2.new(0, 6)
+NineBox_BottomLeft.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right.Name = "NineBox_Right"
+NineBox_Right.Parent = Border
+NineBox_Right.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right.BackgroundTransparency = 1.000
+NineBox_Right.BorderSizePixel = 0
+NineBox_Right.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right.Image = "rbxassetid://238725003"
+NineBox_Right.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right.ImageRectOffset = Vector2.new(6, 6)
+NineBox_Right.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center.Name = "NineBox_Center"
+NineBox_Center.Parent = Border
+NineBox_Center.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center.BackgroundTransparency = 1.000
+NineBox_Center.BorderSizePixel = 0
+NineBox_Center.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center.Image = "rbxassetid://238725003"
+NineBox_Center.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center.ImageRectOffset = Vector2.new(6, 6)
+
+NineBox_Left.Name = "NineBox_Left"
+NineBox_Left.Parent = Border
+NineBox_Left.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left.BackgroundTransparency = 1.000
+NineBox_Left.BorderSizePixel = 0
+NineBox_Left.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left.Image = "rbxassetid://238725003"
+NineBox_Left.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left.ImageRectOffset = Vector2.new(0, 6)
+NineBox_Left.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight.Name = "NineBox_TopRight"
+NineBox_TopRight.Parent = Border
+NineBox_TopRight.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight.BackgroundTransparency = 1.000
+NineBox_TopRight.BorderSizePixel = 0
+NineBox_TopRight.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight.Image = "rbxassetid://238725003"
+NineBox_TopRight.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight.ImageRectOffset = Vector2.new(6, 0)
+NineBox_TopRight.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top.Name = "NineBox_Top"
+NineBox_Top.Parent = Border
+NineBox_Top.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top.BackgroundTransparency = 1.000
+NineBox_Top.BorderSizePixel = 0
+NineBox_Top.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top.Image = "rbxassetid://238725003"
+NineBox_Top.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top.ImageRectOffset = Vector2.new(6, 0)
+NineBox_Top.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft.Name = "NineBox_TopLeft"
+NineBox_TopLeft.Parent = Border
+NineBox_TopLeft.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft.BackgroundTransparency = 1.000
+NineBox_TopLeft.BorderSizePixel = 0
+NineBox_TopLeft.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft.Image = "rbxassetid://238725003"
+NineBox_TopLeft.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft.ImageRectSize = Vector2.new(6, 6)
+
+Border_2.Name = "Border"
+Border_2.Parent = Borders
+Border_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_2.BackgroundTransparency = 1.000
+Border_2.BorderSizePixel = 0
+Border_2.Position = UDim2.new(0, -12, 1, 0)
+Border_2.Size = UDim2.new(0, 12, 0, 12)
+Border_2.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_2.ImageRectOffset = Vector2.new(0, 24)
+Border_2.ImageRectSize = Vector2.new(12, 12)
+Border_2.ImageTransparency = 1.000
+
+NineBox_BottomRight_2.Name = "NineBox_BottomRight"
+NineBox_BottomRight_2.Parent = Border_2
+NineBox_BottomRight_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_2.BackgroundTransparency = 1.000
+NineBox_BottomRight_2.BorderSizePixel = 0
+NineBox_BottomRight_2.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_2.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_2.ImageRectOffset = Vector2.new(6, 30)
+NineBox_BottomRight_2.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_2.Name = "NineBox_Bottom"
+NineBox_Bottom_2.Parent = Border_2
+NineBox_Bottom_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_2.BackgroundTransparency = 1.000
+NineBox_Bottom_2.BorderSizePixel = 0
+NineBox_Bottom_2.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_2.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_2.ImageRectOffset = Vector2.new(6, 30)
+NineBox_Bottom_2.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_2.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_2.Parent = Border_2
+NineBox_BottomLeft_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_2.BackgroundTransparency = 1.000
+NineBox_BottomLeft_2.BorderSizePixel = 0
+NineBox_BottomLeft_2.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_2.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_2.ImageRectOffset = Vector2.new(0, 30)
+NineBox_BottomLeft_2.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_2.Name = "NineBox_Right"
+NineBox_Right_2.Parent = Border_2
+NineBox_Right_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_2.BackgroundTransparency = 1.000
+NineBox_Right_2.BorderSizePixel = 0
+NineBox_Right_2.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_2.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_2.ImageRectOffset = Vector2.new(6, 30)
+NineBox_Right_2.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_2.Name = "NineBox_Center"
+NineBox_Center_2.Parent = Border_2
+NineBox_Center_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_2.BackgroundTransparency = 1.000
+NineBox_Center_2.BorderSizePixel = 0
+NineBox_Center_2.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_2.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_2.ImageRectOffset = Vector2.new(6, 30)
+
+NineBox_Left_2.Name = "NineBox_Left"
+NineBox_Left_2.Parent = Border_2
+NineBox_Left_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_2.BackgroundTransparency = 1.000
+NineBox_Left_2.BorderSizePixel = 0
+NineBox_Left_2.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_2.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_2.ImageRectOffset = Vector2.new(0, 30)
+NineBox_Left_2.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_2.Name = "NineBox_TopRight"
+NineBox_TopRight_2.Parent = Border_2
+NineBox_TopRight_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_2.BackgroundTransparency = 1.000
+NineBox_TopRight_2.BorderSizePixel = 0
+NineBox_TopRight_2.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_2.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_2.ImageRectOffset = Vector2.new(6, 24)
+NineBox_TopRight_2.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_2.Name = "NineBox_Top"
+NineBox_Top_2.Parent = Border_2
+NineBox_Top_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_2.BackgroundTransparency = 1.000
+NineBox_Top_2.BorderSizePixel = 0
+NineBox_Top_2.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_2.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_2.ImageRectOffset = Vector2.new(6, 24)
+NineBox_Top_2.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_2.Name = "NineBox_TopLeft"
+NineBox_TopLeft_2.Parent = Border_2
+NineBox_TopLeft_2.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_2.BackgroundTransparency = 1.000
+NineBox_TopLeft_2.BorderSizePixel = 0
+NineBox_TopLeft_2.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_2.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_2.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_2.ImageRectOffset = Vector2.new(0, 24)
+NineBox_TopLeft_2.ImageRectSize = Vector2.new(6, 6)
+
+Border_3.Name = "Border"
+Border_3.Parent = Borders
+Border_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_3.BackgroundTransparency = 1.000
+Border_3.BorderSizePixel = 0
+Border_3.Position = UDim2.new(0, 0, 0, -12)
+Border_3.Size = UDim2.new(1, 0, 0, 12)
+Border_3.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_3.ImageRectOffset = Vector2.new(12, 0)
+Border_3.ImageRectSize = Vector2.new(12, 12)
+Border_3.ImageTransparency = 1.000
+
+NineBox_BottomRight_3.Name = "NineBox_BottomRight"
+NineBox_BottomRight_3.Parent = Border_3
+NineBox_BottomRight_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_3.BackgroundTransparency = 1.000
+NineBox_BottomRight_3.BorderSizePixel = 0
+NineBox_BottomRight_3.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_3.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_3.ImageRectOffset = Vector2.new(18, 6)
+NineBox_BottomRight_3.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_3.Name = "NineBox_Bottom"
+NineBox_Bottom_3.Parent = Border_3
+NineBox_Bottom_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_3.BackgroundTransparency = 1.000
+NineBox_Bottom_3.BorderSizePixel = 0
+NineBox_Bottom_3.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_3.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_3.ImageRectOffset = Vector2.new(18, 6)
+NineBox_Bottom_3.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_3.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_3.Parent = Border_3
+NineBox_BottomLeft_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_3.BackgroundTransparency = 1.000
+NineBox_BottomLeft_3.BorderSizePixel = 0
+NineBox_BottomLeft_3.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_3.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_3.ImageRectOffset = Vector2.new(12, 6)
+NineBox_BottomLeft_3.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_3.Name = "NineBox_Right"
+NineBox_Right_3.Parent = Border_3
+NineBox_Right_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_3.BackgroundTransparency = 1.000
+NineBox_Right_3.BorderSizePixel = 0
+NineBox_Right_3.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_3.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_3.ImageRectOffset = Vector2.new(18, 6)
+NineBox_Right_3.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_3.Name = "NineBox_Center"
+NineBox_Center_3.Parent = Border_3
+NineBox_Center_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_3.BackgroundTransparency = 1.000
+NineBox_Center_3.BorderSizePixel = 0
+NineBox_Center_3.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_3.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_3.ImageRectOffset = Vector2.new(18, 6)
+
+NineBox_Left_3.Name = "NineBox_Left"
+NineBox_Left_3.Parent = Border_3
+NineBox_Left_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_3.BackgroundTransparency = 1.000
+NineBox_Left_3.BorderSizePixel = 0
+NineBox_Left_3.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_3.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_3.ImageRectOffset = Vector2.new(12, 6)
+NineBox_Left_3.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_3.Name = "NineBox_TopRight"
+NineBox_TopRight_3.Parent = Border_3
+NineBox_TopRight_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_3.BackgroundTransparency = 1.000
+NineBox_TopRight_3.BorderSizePixel = 0
+NineBox_TopRight_3.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_3.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_3.ImageRectOffset = Vector2.new(18, 0)
+NineBox_TopRight_3.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_3.Name = "NineBox_Top"
+NineBox_Top_3.Parent = Border_3
+NineBox_Top_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_3.BackgroundTransparency = 1.000
+NineBox_Top_3.BorderSizePixel = 0
+NineBox_Top_3.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_3.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_3.ImageRectOffset = Vector2.new(18, 0)
+NineBox_Top_3.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_3.Name = "NineBox_TopLeft"
+NineBox_TopLeft_3.Parent = Border_3
+NineBox_TopLeft_3.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_3.BackgroundTransparency = 1.000
+NineBox_TopLeft_3.BorderSizePixel = 0
+NineBox_TopLeft_3.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_3.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_3.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_3.ImageRectOffset = Vector2.new(12, 0)
+NineBox_TopLeft_3.ImageRectSize = Vector2.new(6, 6)
+
+Border_4.Name = "Border"
+Border_4.Parent = Borders
+Border_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_4.BackgroundTransparency = 1.000
+Border_4.BorderSizePixel = 0
+Border_4.Position = UDim2.new(0, -12, 0, 0)
+Border_4.Size = UDim2.new(0, 12, 1, 0)
+Border_4.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_4.ImageRectOffset = Vector2.new(0, 12)
+Border_4.ImageRectSize = Vector2.new(12, 12)
+Border_4.ImageTransparency = 1.000
+
+NineBox_BottomRight_4.Name = "NineBox_BottomRight"
+NineBox_BottomRight_4.Parent = Border_4
+NineBox_BottomRight_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_4.BackgroundTransparency = 1.000
+NineBox_BottomRight_4.BorderSizePixel = 0
+NineBox_BottomRight_4.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_4.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_4.ImageRectOffset = Vector2.new(6, 18)
+NineBox_BottomRight_4.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_4.Name = "NineBox_Bottom"
+NineBox_Bottom_4.Parent = Border_4
+NineBox_Bottom_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_4.BackgroundTransparency = 1.000
+NineBox_Bottom_4.BorderSizePixel = 0
+NineBox_Bottom_4.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_4.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_4.ImageRectOffset = Vector2.new(6, 18)
+NineBox_Bottom_4.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_4.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_4.Parent = Border_4
+NineBox_BottomLeft_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_4.BackgroundTransparency = 1.000
+NineBox_BottomLeft_4.BorderSizePixel = 0
+NineBox_BottomLeft_4.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_4.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_4.ImageRectOffset = Vector2.new(0, 18)
+NineBox_BottomLeft_4.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_4.Name = "NineBox_Right"
+NineBox_Right_4.Parent = Border_4
+NineBox_Right_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_4.BackgroundTransparency = 1.000
+NineBox_Right_4.BorderSizePixel = 0
+NineBox_Right_4.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_4.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_4.ImageRectOffset = Vector2.new(6, 18)
+NineBox_Right_4.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_4.Name = "NineBox_Center"
+NineBox_Center_4.Parent = Border_4
+NineBox_Center_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_4.BackgroundTransparency = 1.000
+NineBox_Center_4.BorderSizePixel = 0
+NineBox_Center_4.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_4.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_4.ImageRectOffset = Vector2.new(6, 18)
+
+NineBox_Left_4.Name = "NineBox_Left"
+NineBox_Left_4.Parent = Border_4
+NineBox_Left_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_4.BackgroundTransparency = 1.000
+NineBox_Left_4.BorderSizePixel = 0
+NineBox_Left_4.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_4.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_4.ImageRectOffset = Vector2.new(0, 18)
+NineBox_Left_4.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_4.Name = "NineBox_TopRight"
+NineBox_TopRight_4.Parent = Border_4
+NineBox_TopRight_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_4.BackgroundTransparency = 1.000
+NineBox_TopRight_4.BorderSizePixel = 0
+NineBox_TopRight_4.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_4.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_4.ImageRectOffset = Vector2.new(6, 12)
+NineBox_TopRight_4.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_4.Name = "NineBox_Top"
+NineBox_Top_4.Parent = Border_4
+NineBox_Top_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_4.BackgroundTransparency = 1.000
+NineBox_Top_4.BorderSizePixel = 0
+NineBox_Top_4.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_4.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_4.ImageRectOffset = Vector2.new(6, 12)
+NineBox_Top_4.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_4.Name = "NineBox_TopLeft"
+NineBox_TopLeft_4.Parent = Border_4
+NineBox_TopLeft_4.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_4.BackgroundTransparency = 1.000
+NineBox_TopLeft_4.BorderSizePixel = 0
+NineBox_TopLeft_4.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_4.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_4.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_4.ImageRectOffset = Vector2.new(0, 12)
+NineBox_TopLeft_4.ImageRectSize = Vector2.new(6, 6)
+
+Border_5.Name = "Border"
+Border_5.Parent = Borders
+Border_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_5.BackgroundTransparency = 1.000
+Border_5.BorderSizePixel = 0
+Border_5.Position = UDim2.new(1, 0, 0, 0)
+Border_5.Size = UDim2.new(0, 12, 1, 0)
+Border_5.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_5.ImageRectOffset = Vector2.new(24, 12)
+Border_5.ImageRectSize = Vector2.new(12, 12)
+Border_5.ImageTransparency = 1.000
+
+NineBox_BottomRight_5.Name = "NineBox_BottomRight"
+NineBox_BottomRight_5.Parent = Border_5
+NineBox_BottomRight_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_5.BackgroundTransparency = 1.000
+NineBox_BottomRight_5.BorderSizePixel = 0
+NineBox_BottomRight_5.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_5.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_5.ImageRectOffset = Vector2.new(30, 18)
+NineBox_BottomRight_5.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_5.Name = "NineBox_Bottom"
+NineBox_Bottom_5.Parent = Border_5
+NineBox_Bottom_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_5.BackgroundTransparency = 1.000
+NineBox_Bottom_5.BorderSizePixel = 0
+NineBox_Bottom_5.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_5.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_5.ImageRectOffset = Vector2.new(30, 18)
+NineBox_Bottom_5.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_5.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_5.Parent = Border_5
+NineBox_BottomLeft_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_5.BackgroundTransparency = 1.000
+NineBox_BottomLeft_5.BorderSizePixel = 0
+NineBox_BottomLeft_5.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_5.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_5.ImageRectOffset = Vector2.new(24, 18)
+NineBox_BottomLeft_5.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_5.Name = "NineBox_Right"
+NineBox_Right_5.Parent = Border_5
+NineBox_Right_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_5.BackgroundTransparency = 1.000
+NineBox_Right_5.BorderSizePixel = 0
+NineBox_Right_5.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_5.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_5.ImageRectOffset = Vector2.new(30, 18)
+NineBox_Right_5.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_5.Name = "NineBox_Center"
+NineBox_Center_5.Parent = Border_5
+NineBox_Center_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_5.BackgroundTransparency = 1.000
+NineBox_Center_5.BorderSizePixel = 0
+NineBox_Center_5.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_5.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_5.ImageRectOffset = Vector2.new(30, 18)
+
+NineBox_Left_5.Name = "NineBox_Left"
+NineBox_Left_5.Parent = Border_5
+NineBox_Left_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_5.BackgroundTransparency = 1.000
+NineBox_Left_5.BorderSizePixel = 0
+NineBox_Left_5.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_5.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_5.ImageRectOffset = Vector2.new(24, 18)
+NineBox_Left_5.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_5.Name = "NineBox_TopRight"
+NineBox_TopRight_5.Parent = Border_5
+NineBox_TopRight_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_5.BackgroundTransparency = 1.000
+NineBox_TopRight_5.BorderSizePixel = 0
+NineBox_TopRight_5.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_5.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_5.ImageRectOffset = Vector2.new(30, 12)
+NineBox_TopRight_5.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_5.Name = "NineBox_Top"
+NineBox_Top_5.Parent = Border_5
+NineBox_Top_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_5.BackgroundTransparency = 1.000
+NineBox_Top_5.BorderSizePixel = 0
+NineBox_Top_5.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_5.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_5.ImageRectOffset = Vector2.new(30, 12)
+NineBox_Top_5.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_5.Name = "NineBox_TopLeft"
+NineBox_TopLeft_5.Parent = Border_5
+NineBox_TopLeft_5.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_5.BackgroundTransparency = 1.000
+NineBox_TopLeft_5.BorderSizePixel = 0
+NineBox_TopLeft_5.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_5.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_5.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_5.ImageRectOffset = Vector2.new(24, 12)
+NineBox_TopLeft_5.ImageRectSize = Vector2.new(6, 6)
+
+Border_6.Name = "Border"
+Border_6.Parent = Borders
+Border_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_6.BackgroundTransparency = 1.000
+Border_6.BorderSizePixel = 0
+Border_6.Position = UDim2.new(0, 0, 1, 0)
+Border_6.Size = UDim2.new(1, 0, 0, 12)
+Border_6.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_6.ImageRectOffset = Vector2.new(12, 24)
+Border_6.ImageRectSize = Vector2.new(12, 12)
+Border_6.ImageTransparency = 1.000
+
+NineBox_BottomRight_6.Name = "NineBox_BottomRight"
+NineBox_BottomRight_6.Parent = Border_6
+NineBox_BottomRight_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_6.BackgroundTransparency = 1.000
+NineBox_BottomRight_6.BorderSizePixel = 0
+NineBox_BottomRight_6.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_6.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_6.ImageRectOffset = Vector2.new(18, 30)
+NineBox_BottomRight_6.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_6.Name = "NineBox_Bottom"
+NineBox_Bottom_6.Parent = Border_6
+NineBox_Bottom_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_6.BackgroundTransparency = 1.000
+NineBox_Bottom_6.BorderSizePixel = 0
+NineBox_Bottom_6.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_6.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_6.ImageRectOffset = Vector2.new(18, 30)
+NineBox_Bottom_6.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_6.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_6.Parent = Border_6
+NineBox_BottomLeft_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_6.BackgroundTransparency = 1.000
+NineBox_BottomLeft_6.BorderSizePixel = 0
+NineBox_BottomLeft_6.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_6.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_6.ImageRectOffset = Vector2.new(12, 30)
+NineBox_BottomLeft_6.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_6.Name = "NineBox_Right"
+NineBox_Right_6.Parent = Border_6
+NineBox_Right_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_6.BackgroundTransparency = 1.000
+NineBox_Right_6.BorderSizePixel = 0
+NineBox_Right_6.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_6.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_6.ImageRectOffset = Vector2.new(18, 30)
+NineBox_Right_6.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_6.Name = "NineBox_Center"
+NineBox_Center_6.Parent = Border_6
+NineBox_Center_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_6.BackgroundTransparency = 1.000
+NineBox_Center_6.BorderSizePixel = 0
+NineBox_Center_6.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_6.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_6.ImageRectOffset = Vector2.new(18, 30)
+
+NineBox_Left_6.Name = "NineBox_Left"
+NineBox_Left_6.Parent = Border_6
+NineBox_Left_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_6.BackgroundTransparency = 1.000
+NineBox_Left_6.BorderSizePixel = 0
+NineBox_Left_6.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_6.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_6.ImageRectOffset = Vector2.new(12, 30)
+NineBox_Left_6.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_6.Name = "NineBox_TopRight"
+NineBox_TopRight_6.Parent = Border_6
+NineBox_TopRight_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_6.BackgroundTransparency = 1.000
+NineBox_TopRight_6.BorderSizePixel = 0
+NineBox_TopRight_6.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_6.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_6.ImageRectOffset = Vector2.new(18, 24)
+NineBox_TopRight_6.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_6.Name = "NineBox_Top"
+NineBox_Top_6.Parent = Border_6
+NineBox_Top_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_6.BackgroundTransparency = 1.000
+NineBox_Top_6.BorderSizePixel = 0
+NineBox_Top_6.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_6.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_6.ImageRectOffset = Vector2.new(18, 24)
+NineBox_Top_6.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_6.Name = "NineBox_TopLeft"
+NineBox_TopLeft_6.Parent = Border_6
+NineBox_TopLeft_6.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_6.BackgroundTransparency = 1.000
+NineBox_TopLeft_6.BorderSizePixel = 0
+NineBox_TopLeft_6.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_6.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_6.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_6.ImageRectOffset = Vector2.new(12, 24)
+NineBox_TopLeft_6.ImageRectSize = Vector2.new(6, 6)
+
+Border_7.Name = "Border"
+Border_7.Parent = Borders
+Border_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_7.BackgroundTransparency = 1.000
+Border_7.BorderSizePixel = 0
+Border_7.Position = UDim2.new(1, 0, 1, 0)
+Border_7.Size = UDim2.new(0, 12, 0, 12)
+Border_7.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_7.ImageRectOffset = Vector2.new(24, 24)
+Border_7.ImageRectSize = Vector2.new(12, 12)
+Border_7.ImageTransparency = 1.000
+
+NineBox_BottomRight_7.Name = "NineBox_BottomRight"
+NineBox_BottomRight_7.Parent = Border_7
+NineBox_BottomRight_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_7.BackgroundTransparency = 1.000
+NineBox_BottomRight_7.BorderSizePixel = 0
+NineBox_BottomRight_7.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_7.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_7.ImageRectOffset = Vector2.new(30, 30)
+NineBox_BottomRight_7.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_7.Name = "NineBox_Bottom"
+NineBox_Bottom_7.Parent = Border_7
+NineBox_Bottom_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_7.BackgroundTransparency = 1.000
+NineBox_Bottom_7.BorderSizePixel = 0
+NineBox_Bottom_7.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_7.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_7.ImageRectOffset = Vector2.new(30, 30)
+NineBox_Bottom_7.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_7.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_7.Parent = Border_7
+NineBox_BottomLeft_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_7.BackgroundTransparency = 1.000
+NineBox_BottomLeft_7.BorderSizePixel = 0
+NineBox_BottomLeft_7.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_7.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_7.ImageRectOffset = Vector2.new(24, 30)
+NineBox_BottomLeft_7.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_7.Name = "NineBox_Right"
+NineBox_Right_7.Parent = Border_7
+NineBox_Right_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_7.BackgroundTransparency = 1.000
+NineBox_Right_7.BorderSizePixel = 0
+NineBox_Right_7.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_7.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_7.ImageRectOffset = Vector2.new(30, 30)
+NineBox_Right_7.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_7.Name = "NineBox_Center"
+NineBox_Center_7.Parent = Border_7
+NineBox_Center_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_7.BackgroundTransparency = 1.000
+NineBox_Center_7.BorderSizePixel = 0
+NineBox_Center_7.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_7.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_7.ImageRectOffset = Vector2.new(30, 30)
+
+NineBox_Left_7.Name = "NineBox_Left"
+NineBox_Left_7.Parent = Border_7
+NineBox_Left_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_7.BackgroundTransparency = 1.000
+NineBox_Left_7.BorderSizePixel = 0
+NineBox_Left_7.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_7.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_7.ImageRectOffset = Vector2.new(24, 30)
+NineBox_Left_7.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_7.Name = "NineBox_TopRight"
+NineBox_TopRight_7.Parent = Border_7
+NineBox_TopRight_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_7.BackgroundTransparency = 1.000
+NineBox_TopRight_7.BorderSizePixel = 0
+NineBox_TopRight_7.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_7.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_7.ImageRectOffset = Vector2.new(30, 24)
+NineBox_TopRight_7.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_7.Name = "NineBox_Top"
+NineBox_Top_7.Parent = Border_7
+NineBox_Top_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_7.BackgroundTransparency = 1.000
+NineBox_Top_7.BorderSizePixel = 0
+NineBox_Top_7.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_7.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_7.ImageRectOffset = Vector2.new(30, 24)
+NineBox_Top_7.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_7.Name = "NineBox_TopLeft"
+NineBox_TopLeft_7.Parent = Border_7
+NineBox_TopLeft_7.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_7.BackgroundTransparency = 1.000
+NineBox_TopLeft_7.BorderSizePixel = 0
+NineBox_TopLeft_7.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_7.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_7.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_7.ImageRectOffset = Vector2.new(24, 24)
+NineBox_TopLeft_7.ImageRectSize = Vector2.new(6, 6)
+
+Border_8.Name = "Border"
+Border_8.Parent = Borders
+Border_8.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_8.BackgroundTransparency = 1.000
+Border_8.BorderSizePixel = 0
+Border_8.Position = UDim2.new(1, 0, 0, -12)
+Border_8.Size = UDim2.new(0, 12, 0, 12)
+Border_8.Image = "http://www.roblox.com/asset/?id=238725003"
+Border_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+Border_8.ImageRectOffset = Vector2.new(24, 0)
+Border_8.ImageRectSize = Vector2.new(12, 12)
+Border_8.ImageTransparency = 1.000
+
+NineBox_BottomRight_8.Name = "NineBox_BottomRight"
+NineBox_BottomRight_8.Parent = Border_8
+NineBox_BottomRight_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomRight_8.BackgroundTransparency = 1.000
+NineBox_BottomRight_8.BorderSizePixel = 0
+NineBox_BottomRight_8.Position = UDim2.new(1, -6, 1, -6)
+NineBox_BottomRight_8.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomRight_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomRight_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomRight_8.ImageRectOffset = Vector2.new(30, 6)
+NineBox_BottomRight_8.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Bottom_8.Name = "NineBox_Bottom"
+NineBox_Bottom_8.Parent = Border_8
+NineBox_Bottom_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Bottom_8.BackgroundTransparency = 1.000
+NineBox_Bottom_8.BorderSizePixel = 0
+NineBox_Bottom_8.Position = UDim2.new(0, 6, 1, -6)
+NineBox_Bottom_8.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Bottom_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Bottom_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Bottom_8.ImageRectOffset = Vector2.new(30, 6)
+NineBox_Bottom_8.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_BottomLeft_8.Name = "NineBox_BottomLeft"
+NineBox_BottomLeft_8.Parent = Border_8
+NineBox_BottomLeft_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_BottomLeft_8.BackgroundTransparency = 1.000
+NineBox_BottomLeft_8.BorderSizePixel = 0
+NineBox_BottomLeft_8.Position = UDim2.new(0, 0, 1, -6)
+NineBox_BottomLeft_8.Size = UDim2.new(0, 6, 0, 6)
+NineBox_BottomLeft_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_BottomLeft_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_BottomLeft_8.ImageRectOffset = Vector2.new(24, 6)
+NineBox_BottomLeft_8.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Right_8.Name = "NineBox_Right"
+NineBox_Right_8.Parent = Border_8
+NineBox_Right_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Right_8.BackgroundTransparency = 1.000
+NineBox_Right_8.BorderSizePixel = 0
+NineBox_Right_8.Position = UDim2.new(1, -6, 0, 6)
+NineBox_Right_8.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Right_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Right_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Right_8.ImageRectOffset = Vector2.new(30, 6)
+NineBox_Right_8.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_Center_8.Name = "NineBox_Center"
+NineBox_Center_8.Parent = Border_8
+NineBox_Center_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Center_8.BackgroundTransparency = 1.000
+NineBox_Center_8.BorderSizePixel = 0
+NineBox_Center_8.Position = UDim2.new(0, 6, 0, 6)
+NineBox_Center_8.Size = UDim2.new(1, -12, 1, -12)
+NineBox_Center_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Center_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Center_8.ImageRectOffset = Vector2.new(30, 6)
+
+NineBox_Left_8.Name = "NineBox_Left"
+NineBox_Left_8.Parent = Border_8
+NineBox_Left_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Left_8.BackgroundTransparency = 1.000
+NineBox_Left_8.BorderSizePixel = 0
+NineBox_Left_8.Position = UDim2.new(0, 0, 0, 6)
+NineBox_Left_8.Size = UDim2.new(0, 6, 1, -12)
+NineBox_Left_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Left_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Left_8.ImageRectOffset = Vector2.new(24, 6)
+NineBox_Left_8.ImageRectSize = Vector2.new(6, 0)
+
+NineBox_TopRight_8.Name = "NineBox_TopRight"
+NineBox_TopRight_8.Parent = Border_8
+NineBox_TopRight_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopRight_8.BackgroundTransparency = 1.000
+NineBox_TopRight_8.BorderSizePixel = 0
+NineBox_TopRight_8.Position = UDim2.new(1, -6, 0, 0)
+NineBox_TopRight_8.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopRight_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopRight_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopRight_8.ImageRectOffset = Vector2.new(30, 0)
+NineBox_TopRight_8.ImageRectSize = Vector2.new(6, 6)
+
+NineBox_Top_8.Name = "NineBox_Top"
+NineBox_Top_8.Parent = Border_8
+NineBox_Top_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_Top_8.BackgroundTransparency = 1.000
+NineBox_Top_8.BorderSizePixel = 0
+NineBox_Top_8.Position = UDim2.new(0, 6, 0, 0)
+NineBox_Top_8.Size = UDim2.new(1, -12, 0, 6)
+NineBox_Top_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_Top_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_Top_8.ImageRectOffset = Vector2.new(30, 0)
+NineBox_Top_8.ImageRectSize = Vector2.new(0, 6)
+
+NineBox_TopLeft_8.Name = "NineBox_TopLeft"
+NineBox_TopLeft_8.Parent = Border_8
+NineBox_TopLeft_8.BackgroundColor3 = Color3.fromRGB(15, 23, 30)
+NineBox_TopLeft_8.BackgroundTransparency = 1.000
+NineBox_TopLeft_8.BorderSizePixel = 0
+NineBox_TopLeft_8.Size = UDim2.new(0, 6, 0, 6)
+NineBox_TopLeft_8.Image = "http://www.roblox.com/asset/?id=238725003"
+NineBox_TopLeft_8.ImageColor3 = Color3.fromRGB(137, 40, 231)
+NineBox_TopLeft_8.ImageRectOffset = Vector2.new(24, 0)
+NineBox_TopLeft_8.ImageRectSize = Vector2.new(6, 6)
+
+Border_9.Name = "Border"
+Border_9.Parent = MainFrame
+Border_9.Active = false
+Border_9.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_9.BackgroundTransparency = 1.000
+Border_9.BorderSizePixel = 0
+Border_9.Position = UDim2.new(0.082251586, 0, 0.489447802, 0)
+Border_9.Size = UDim2.new(0, 327, 0, 49)
+Border_9.Image = "rbxassetid://3570695787"
+Border_9.ScaleType = Enum.ScaleType.Slice
+Border_9.SliceCenter = Rect.new(100, 100, 100, 100)
+Border_9.SliceScale = 0.100
+
+message.Name = "message"
+message.Parent = MainFrame
+message.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+message.BackgroundTransparency = 1.000
+message.BorderSizePixel = 0
+message.Position = UDim2.new(0.10782703, 0, 0.52027297, 0)
+message.Size = UDim2.new(0, 306, 0, 41)
+message.Font = Enum.Font.SourceSans
+message.PlaceholderText = "Message"
+message.Text = ""
+message.TextColor3 = Color3.fromRGB(178, 178, 178)
+message.TextScaled = true
+message.TextSize = 14.000
+message.TextWrapped = true
+
+Border_10.Name = "Border"
+Border_10.Parent = MainFrame
+Border_10.Active = false
+Border_10.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Border_10.BackgroundTransparency = 1.000
+Border_10.BorderSizePixel = 0
+Border_10.Position = UDim2.new(0.082251586, 0, 0.253063262, 0)
+Border_10.Size = UDim2.new(0, 327, 0, 49)
+Border_10.Image = "rbxassetid://3570695787"
+Border_10.ScaleType = Enum.ScaleType.Slice
+Border_10.SliceCenter = Rect.new(100, 100, 100, 100)
+Border_10.SliceScale = 0.100
+
+player.Name = "player"
+player.Parent = MainFrame
+player.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+player.BackgroundTransparency = 1.000
+player.BorderSizePixel = 0
+player.Position = UDim2.new(0.108850114, 0, 0.296442688, 0)
+player.Size = UDim2.new(0, 307, 0, 36)
+player.Font = Enum.Font.Code
+player.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
+player.PlaceholderText = "Player"
+player.Text = ""
+player.TextColor3 = Color3.fromRGB(178, 178, 178)
+player.TextScaled = true
+player.TextSize = 14.000
+player.TextWrapped = true
